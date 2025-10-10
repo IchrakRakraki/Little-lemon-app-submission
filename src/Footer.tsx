@@ -5,7 +5,7 @@ const Footer = () => {
     return (
         <footer>
             <img src={LargeLogo} alt="Little Lemon restaurant logo" />
-            <div>
+            <div className="footerCategory">
                 <h3>Doormat Navigation</h3>
                 <ul>
                     <li><a href="#home">Home</a></li>
@@ -16,7 +16,7 @@ const Footer = () => {
                     <li><a href="#login">Login</a></li>
                 </ul>
             </div>
-            <div>
+            <div className="footerCategory">
                 <h3>Contact</h3>
                 <ul>
                     <li><a href="#google-maps">Adress</a></li>
@@ -24,7 +24,7 @@ const Footer = () => {
                     <li><a href="#email">Email</a></li>
                 </ul>
             </div>
-            <div>
+            <div className="footerCategory">
                 <h3>Social Media Links</h3>
                 <ul>
                     <li><a href="#google-maps">Tiktok</a></li>
