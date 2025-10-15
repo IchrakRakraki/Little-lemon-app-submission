@@ -19,6 +19,7 @@ const StyledNav = styled.nav`
     grid-template-columns: 148px 1fr;
     grid-gap: ${theme.spacing.lg};
     align-items: center;
+    padding: 1rem 0;
   `};
   ${media.lg`
     grid-column: 2/-2;
@@ -51,6 +52,11 @@ const NavLinks = styled.ul`
     `}
 `;
 
+const NavLink = styled.li`
+  font-weight: ${({ theme }) => theme.fontWeight.medium};
+  font-size: ${({ theme }) => theme.fontSize.sm};
+`;
+
 const Nav = () => {
   return (
     <ColumnGrid>
@@ -59,24 +65,24 @@ const Nav = () => {
         <img src={logo} alt="Little Lemon restautant logo." />
         <MobileIcon src={basketIcon} alt="Hamberger menu icon." />
         <NavLinks>
-          <li>
+          <NavLink>
             <a href="#home">Home</a>
-          </li>
-          <li>
+          </NavLink>
+          <NavLink>
             <a href="#about">About</a>
-          </li>
-          <li>
+          </NavLink>
+          <NavLink>
             <a href="#menu">Menu</a>
-          </li>
-          <li>
+          </NavLink>
+          <NavLink>
             <a href="#reservations">Reservations</a>
-          </li>
-          <li>
+          </NavLink>
+          <NavLink>
             <a href="#order">Order Online</a>
-          </li>
-          <li>
+          </NavLink>
+          <NavLink>
             <a href="#login">Login</a>
-          </li>
+          </NavLink>
         </NavLinks>
       </StyledNav>
     </ColumnGrid>

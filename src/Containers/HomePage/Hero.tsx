@@ -5,7 +5,8 @@ import CTAButton from "../../Components/CTAButton";
 import { ColumnGrid } from "../../styles/StyledComponents";
 
 const HeroSection = styled.section`
-  background-color: ${({ theme }) => theme.colors.primary.dark};
+  background-color: ${({ theme }) => theme.color.primary.dark};
+  padding: 1.5rem 0;
 `;
 
 const HeroTextContent = styled.div`
@@ -26,16 +27,18 @@ const HeroTextContent = styled.div`
 `;
 
 const Title = styled.h1`
-  color: ${({ theme }) => theme.colors.primary.light};
+  color: ${({ theme }) => theme.color.primary.light};
   line-height: 0.8;
 `;
 
 const Subtitle = styled.h2`
-  color: ${({ theme }) => theme.colors.highlight.light};
+  color: ${({ theme }) => theme.color.highlight.light};
 `;
 
 const Description = styled.p`
-  color: ${({ theme }) => theme.colors.highlight.light};
+  color: ${({ theme }) => theme.color.highlight.light};
+  font-size: ${({ theme }) => theme.fontSize.sm};
+  font-weight: ${({ theme }) => theme.fontWeight.medium};
 `;
 const ImageContainer = styled.div`
   width: 100%;
@@ -61,7 +64,6 @@ const HeroImage = styled.img`
   border-radius: ${({ theme }) => theme.spacing.md};
   box-shadow: ${({ theme }) => theme.boxShadow.img};
   top: 10%;
-  object-fit: cover;
   ${media.md`
     right: 0;
     width: 80%;

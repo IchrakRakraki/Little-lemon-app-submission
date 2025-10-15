@@ -2,24 +2,32 @@ import "styled-components";
 
 declare module "styled-components" {
   export interface DefaultTheme {
-    colors: {
+    color: {
       primary: { light: string; dark: string };
       secondary: { light: string; dark: string };
       highlight: { light: string; dark: string };
       text: string;
+      mutedText: string;
       background: string;
     };
-    fontSizes: {
+    fontSize: {
       xxs: string;
       xs: string;
       sm: string;
       md: string;
+      mdPlus: string;
       lg: string;
       xl: string;
     };
-    fonts: {
+    font: {
       primary: string;
       secondary: string;
+    };
+    fontWeight: {
+      regular: string;
+      medium: string;
+      semiBold: string;
+      bold: string;
     };
     borderRadius: {
       sm: string;
@@ -32,7 +40,7 @@ declare module "styled-components" {
       lg: string;
       xl: string;
     };
-    breakpoints: {
+    breakpoint: {
       sm: string;
       md: string;
       lg: string;

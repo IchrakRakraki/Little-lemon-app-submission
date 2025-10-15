@@ -19,6 +19,14 @@ const TextContent = styled.div`
     `}
 `;
 
+const Title = styled.h1`
+  color: ${({ theme }) => theme.color.primary.dark};
+`;
+
+const Subtitle = styled.h2`
+  margin-bottom: ${({ theme }) => theme.spacing.lg};
+`;
+
 const ThumbnailSection = styled.div`
   position: relative;
   width: 100%;
@@ -46,7 +54,6 @@ const AboutImage = styled.img<{ bottomImg?: boolean }>`
   left: 0;
   top: ${({ bottomImg }) => (bottomImg ? "75px" : 0)};
   z-index: ${({ bottomImg }) => (bottomImg ? -1 : 0)};
-  object-fit: cover;
   border-radius: ${({ theme }) => theme.borderRadius.md};
   box-shadow: ${({ theme }) => theme.boxShadow.img};
 `;
@@ -55,8 +62,8 @@ const About = () => (
   <section id="about">
     <ColumnGrid>
       <TextContent>
-        <h1>Little Lemon</h1>
-        <h2>Chicago</h2>
+        <Title>Little Lemon</Title>
+        <Subtitle>Chicago</Subtitle>
         <p>
           Welcome to The Little Lemon, a family-owned Mediterranean restaurant where tradition meets
           modern flavor.

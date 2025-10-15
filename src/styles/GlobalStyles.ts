@@ -9,43 +9,60 @@ export const GlobalStyles = createGlobalStyle`
   }
 
   body {
-    font-family: ${({ theme }) => theme.fonts.primary};
-    background-color: ${({ theme }) => theme.colors.background};
-    color: ${({ theme }) => theme.colors.text};
+    font-family: ${({ theme }) => theme.font.primary};
+    background-color: ${({ theme }) => theme.color.background};
+    color: ${({ theme }) => theme.color.text};
+    font-optical-sizing: auto;
+    font-style: normal;
+    font-size: ${({ theme }) => theme.fontSize.xs};
   }
 
-  section:not(:first-child), footer{
-    margin-top: 5rem;
-    padding: 2rem 0;
+  section:not(:first-child){
+    padding: 5rem 0 6rem;
+  }
+
+  #bookingRsvDetails, #bookingContactDetails {
+    padding: 1.5rem 0 ;
+  }
+
+  footer {
+    padding: 5rem 0
   }
 
   h1, h2, h3 {
-    font-family: ${({ theme }) => theme.fonts.secondary};
+    font-family: ${({ theme }) => theme.font.secondary};
   }
 
   h1 {
-    font-size: ${({ theme }) => theme.fontSizes.xl};
-    line-height: 0.8;
+    font-size: ${({ theme }) => theme.fontSize.xl};
+    line-height: 1;
+    font-weight: ${({ theme }) => theme.fontWeight.medium};
   }
 
   h2 {
-    font-size: ${({ theme }) => theme.fontSizes.lg}
+    font-size: ${({ theme }) => theme.fontSize.lg};
+    font-weight: ${({ theme }) => theme.fontWeight.medium};
   }
 
   h3 {
-    font-size: ${({ theme }) => theme.fontSizes.md}
+    font-size: ${({ theme }) => theme.fontSize.mdPlus};
+    font-weight: ${({ theme }) => theme.fontWeight.medium};
   }
 
   p {
     max-width: 35ch;
-    margin: ${({ theme }) => theme.spacing.md} 0;
+    margin: ${({ theme }) => theme.spacing.lg} 0;
   }
   a {
     text-decoration: none;
-    color: ${({ theme }) => theme.colors.text};
+    color: ${({ theme }) => theme.color.text};
   }
 
   ul {
     list-style: none;
+  }
+
+  img{
+    object-fit: cover;
   }
 `;

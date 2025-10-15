@@ -5,14 +5,13 @@ import { ColumnGrid } from "../../styles/StyledComponents";
 import { media } from "../../styles/Theme";
 
 const TestimonialsSection = styled.section`
-  background-color: ${({ theme }) => theme.colors.secondary.light};
+  background-color: ${({ theme }) => theme.color.secondary.light};
 `;
 const Content = styled.div`
   grid-column: 1/-1;
   display: grid;
   grid-template-columns: 1fr;
   grid-gap: ${({ theme }) => theme.spacing.lg};
-  padding-bottom: 2rem;
   ${media.sm`
   grid-template-columns: repeat(2, 1fr);
 `}

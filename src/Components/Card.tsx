@@ -1,20 +1,26 @@
 import styled from "styled-components";
 import { media } from "../styles/Theme";
+import delivery from "../assets/delivery.svg";
 
 const MenuItem = styled.article`
   width: 100%;
   border-radius: ${({ theme }) => `${theme.borderRadius.md} ${theme.borderRadius.md} 0 0`};
-  background-color: ${({ theme }) => theme.colors.highlight.light};
+  background-color: ${({ theme }) => theme.color.highlight.light};
 `;
 const Thumbnail = styled.img`
   border-radius: ${({ theme }) => `${theme.borderRadius.md} ${theme.borderRadius.md} 0 0`};
   width: 100%;
   height: 180px;
-  object-fit: cover;
 `;
 const CardHeader = styled.div`
   display: flex;
   justify-content: space-between;
+  font-weight: ${({ theme }) => theme.fontWeight.medium};
+  align-items: baseline;
+`;
+const Price = styled.span`
+  color: ${({ theme }) => theme.color.secondary.dark};
+  font-weight: ${({ theme }) => theme.fontWeight.bold};
 `;
 const CardContent = styled.div`
   padding: ${({ theme }) => theme.spacing.md};
@@ -28,9 +34,14 @@ const DeliveryButton = styled.button`
   background-color: transparent;
   border: none;
   text-decoration: underline;
-  font-weight: bolder;
+  font-weight: ${({ theme }) => theme.fontWeight.bold};
   text-align: start;
   padding: 0.5rem 0;
+`;
+
+const Icon = styled.img`
+  color: ${({ theme }) => theme.color.highlight.dark};
+  margin-left: ${({ theme }) => theme.spacing.sm};
 `;
 
 type CardProps = {
@@ -48,10 +59,12 @@ const Card: React.FC<CardProps> = ({ title, price, description, imgSrc, altText 
       <CardContent>
         <CardHeader>
           <h3>{title}</h3>
-          <span>${price}</span>
+          <Price>${price}</Price>
         </CardHeader>
         <p>{description}</p>
-        <DeliveryButton>Order a delivery + icon</DeliveryButton>
+        <DeliveryButton>
+          Order a delivery <Icon src={delivery} alt="delivery icon" />
+        </DeliveryButton>
       </CardContent>
     </MenuItem>
   );
