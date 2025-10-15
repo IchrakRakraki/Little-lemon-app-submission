@@ -1,8 +1,8 @@
 import styled from "styled-components";
-import TestimonialCard from "../Components/TestimonialCard";
-import { testimonials } from "../dummyData";
-import { ColumnGrid } from "../styles/StyledComponents";
-import { media } from "../styles/Theme";
+import TestimonialCard from "../../Components/TestimonialCard";
+import { testimonials } from "../../dummyData";
+import { ColumnGrid } from "../../styles/StyledComponents";
+import { media } from "../../styles/Theme";
 
 const TestimonialsSection = styled.section`
   background-color: ${({ theme }) => theme.colors.secondary.light};
@@ -15,7 +15,6 @@ const Content = styled.div`
   padding-bottom: 2rem;
   ${media.sm`
   grid-template-columns: repeat(2, 1fr);
-    
 `}
   ${media.md`
         grid-template-columns: repeat(4, minmax(0, 1fr));

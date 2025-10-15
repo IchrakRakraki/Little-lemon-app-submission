@@ -1,9 +1,9 @@
 import styled from "styled-components";
-import Card from "../Components/Card";
-import { weekSpecials } from "../dummyData";
-import { ColumnGrid } from "../styles/StyledComponents";
-import CTAButton from "../Components/CTAButton";
-import { media } from "../styles/Theme";
+import Card from "../../Components/Card";
+import { weekSpecials } from "../../dummyData";
+import { ColumnGrid } from "../../styles/StyledComponents";
+import CTAButton from "../../Components/CTAButton";
+import { media } from "../../styles/Theme";
 
 const Content = styled.div`
   margin-top: 2rem;

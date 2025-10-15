@@ -1,16 +1,13 @@
-import About from "./About";
-import Hero from "./Hero";
-import Specials from "./Specials";
-import Testimonials from "./Testimonials";
+import { Routes, Route } from "react-router-dom";
+import HomePage from "./HomePage/HomePage";
+import BookingPage from "./BookingPage/BookingPage";
 
 const Main = () => {
   return (
-    <main>
-      <Hero />
-      <Specials />
-      <Testimonials />
-      <About />
-    </main>
+    <Routes>
+       <Route path="/" element={<HomePage />}></Route>
+      <Route path="/booking" element={<BookingPage />}></Route>
+    </Routes>
   );
 };
 export default Main;

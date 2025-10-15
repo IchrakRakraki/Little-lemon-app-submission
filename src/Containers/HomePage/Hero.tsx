@@ -1,8 +1,8 @@
 import styled from "styled-components";
-import heroImage from "../assets/restauranfood.jpg";
-import { media } from "../styles/Theme";
-import CTAButton from "../Components/CTAButton";
-import { ColumnGrid } from "../styles/StyledComponents";
+import heroImage from "../../assets/restauranfood.jpg";
+import { media } from "../../styles/Theme";
+import CTAButton from "../../Components/CTAButton";
+import { ColumnGrid } from "../../styles/StyledComponents";
 
 const HeroSection = styled.section`
   background-color: ${({ theme }) => theme.colors.primary.dark};
