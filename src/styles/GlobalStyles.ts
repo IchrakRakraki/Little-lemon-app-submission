@@ -22,7 +22,7 @@ export const GlobalStyles = createGlobalStyle`
   }
 
   #bookingRsvDetails, #bookingContactDetails {
-    padding: 1.5rem 0 ;
+    padding: 0 ;
   }
 
   footer {

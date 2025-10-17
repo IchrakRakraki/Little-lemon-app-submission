@@ -7,23 +7,22 @@ type ButtonProps = {
 };
 
 const Button = styled.button<{ type?: string }>`
+  cursor: pointer;
   padding: ${({ theme }) => theme.spacing.md};
   border-radius: ${({ theme }) => theme.spacing.md};
   background-color: ${({ theme }) => theme.color.primary.light};
   border: none;
-  cursor: pointer;
-`;
-
-const BtnText = styled.span`
   color: ${({ theme }) => theme.color.highlight.dark};
   font-weight: ${({ theme }) => theme.fontWeight.medium};
   font-size: ${({ theme }) => theme.fontSize.sm};
+  width: auto;
+  height: auto;
 `;
 
-const CTAButton: React.FC<ButtonProps> = ({ buttonText, type, onClick }) => {
+const CTAButton: React.FC<ButtonProps> = ({ buttonText, type = "button", onClick }) => {
   return (
     <Button type={type} onClick={onClick}>
-      <BtnText>{buttonText}</BtnText>
+      {buttonText}
     </Button>
   );
 };

@@ -1,10 +1,12 @@
 import styled from "styled-components";
-import { Container, CustomSection, FlexContainer, Subtitle } from "./BookingPage";
+import { Container, FlexContainer, Subtitle, type DateType, type Reservation } from "./BookingPage";
 import Calendar from "react-calendar";
 import "react-calendar/dist/Calendar.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faSquareMinus, faSquarePlus } from "@fortawesome/free-regular-svg-icons";
+import { faMinus, faPlus } from "@fortawesome/free-solid-svg-icons";
 import { media } from "../../styles/Theme";
+import { useEffect, useRef, useState, type Dispatch, type FC, type SetStateAction } from "react";
+import { minMaxDiners, minMaxTime } from "../../utils/constants";
 
 const ReservationDetails = styled.div`
   ${({ theme }) => media.sm`
@@ -20,7 +22,6 @@ const CustomCalendar = styled(Calendar)`
   border: none;
   font-family: ${({ theme }) => theme.font.primary};
   text-decoration: none;
-
   button:enabled {
     cursor: pointer;
     font-weight: ${({ theme }) => theme.fontWeight.medium};
@@ -47,6 +48,7 @@ const CustomCalendar = styled(Calendar)`
     color: ${({ theme }) => theme.color.primary.dark};
   }
   .react-calendar__tile {
+    transition: background-color 0.2s;
     abbr {
       color: ${({ theme }) => theme.color.primary.dark};
     }
@@ -55,7 +57,10 @@ const CustomCalendar = styled(Calendar)`
     }
     &:focus,
     :focus-visible {
-      background-color: ${({ theme }) => theme.color.primary.light};
+      background-color: ${({ theme }) => theme.color.primary.dark};
+      abbr {
+        color: ${({ theme }) => theme.color.background};
+      }
     }
   }
   .react-calendar__tile--now {
@@ -63,66 +68,203 @@ const CustomCalendar = styled(Calendar)`
   }
   .react-calendar__tile--active {
     background-color: ${({ theme }) => theme.color.primary.light};
+    &:focus,
+    :focus-visible {
+      background-color: ${({ theme }) => theme.color.primary.light};
+      abbr {
+        color: ${({ theme }) => theme.color.primary.dark};
+      }
+    }
   }
 `;
 
-const ReservationSection = () => {
-  const currentDate = new Date();
+const TimePicker = styled.input`
+  border: 2px solid ${({ theme }) => theme.color.primary.dark};
+  padding: ${({ theme }) => theme.spacing.sm};
+  border-radius: ${({ theme }) => theme.borderRadius.sm};
+  outline: none;
+  transition: background-color 0.2s outline 0.2s;
+  &:active {
+    background-color: ${({ theme }) => theme.color.highlight.light};
+  }
+  &:focus,
+  &:focus-visible {
+    outline: 4px solid ${({ theme }) => theme.color.highlight.light};
+  }
+`;
+
+const CounterIcon = styled.button`
+  cursor: pointer;
+  color: ${({ theme }) => theme.color.primary.dark};
+  border-radius: 50%;
+  padding: ${({ theme }) => theme.spacing.xs};
+  background: none;
+  border: 2px solid ${({ theme }) => theme.color.primary.dark};
+  outline: none;
+  transition: background-color 0.4s outline 0.2s;
+  &:enabled:hover {
+    background-color: ${({ theme }) => theme.color.highlight.light};
+  }
+  &:active {
+    background-color: ${({ theme }) => theme.color.highlight.light};
+    transform: scale(0.95);
+  }
+  &:focus-visible {
+    outline: 4px solid ${({ theme }) => theme.color.highlight.light};
+  }
+  &:disabled {
+    pointer-events: none;
+    cursor: not-allowed;
+    color: ${({ theme }) => theme.color.highlight.light};
+    border: 2px solid ${({ theme }) => theme.color.highlight.light};
+  }
+`;
+
+const NumberDiners = styled.input`
+  -webkit-appearance: none;
+  -moz-appearance: textfield;
+  padding: ${({ theme }) => theme.spacing.sm};
+  border: 2px solid ${({ theme }) => theme.color.primary.dark};
+  border-radius: ${({ theme }) => theme.borderRadius.sm};
+  width: 6ch;
+  text-align: center;
+  outline: none;
+  transition: all 0.2s;
+  &:focus,
+  &:focus-visible {
+    outline: 4px solid ${({ theme }) => theme.color.highlight.light};
+  }
+`;
+const CustomRadioInput = styled.input`
+  width: 20px;
+  height: 20px;
+  accent-color: ${({ theme }) => theme.color.primary.dark};
+  cursor: pointer;
+`;
+
+type ReservationSectionProps = {
+  reservation: Reservation;
+  currentDate: Date;
+  setReservation: Dispatch<SetStateAction<Reservation>>;
+};
+const ReservationSection: FC<ReservationSectionProps> = ({
+  reservation,
+  currentDate,
+  setReservation,
+}) => {
+  const timeInputRef = useRef<HTMLInputElement>(null);
+  const { date, time, dinersCount, isSeatingIndoor } = reservation;
+
   const maxReservationDate = new Date();
   maxReservationDate.setDate(currentDate.getDate() + 30);
-  const availableTime = new Date(currentDate.getTime() + 15 * 60000);
+
+  const handleDateChange = (value: DateType, event: { type: string }) => {
+    if (Array.isArray(value)) return;
+    console.log(event);
+    setReservation(prev => ({ ...prev, date: value }));
+    timeInputRef.current?.focus();
+  };
+  useEffect(() => {
+    // Remove month label from keyboard navigation
+    const calendarLabelBtn = document.querySelector(".react-calendar__navigation__label");
+    calendarLabelBtn !== null && calendarLabelBtn.setAttribute("tab-index", "-1");
+  }, []);
+
   return (
-    <CustomSection id="bookingRsvDetails" aria-labelledby="reservation-details">
-      <Subtitle>Reservation details</Subtitle>
+    <section id="bookingRsvDetails" aria-labelledby="reservation-details">
+      <Subtitle id="reservation-details">Reservation details</Subtitle>
       <ReservationDetails>
-        <Container>
-          <h3>Select date</h3>
+        <Container aria-labelledby="date-label">
+          <h3 id="date-label">Select date</h3>
           <CustomCalendar
             prev2Label={null}
             next2Label={null}
             minDate={currentDate}
             maxDate={maxReservationDate}
             view="month"
+            value={date}
+            onChange={handleDateChange}
           />
         </Container>
         <Container>
-          <FlexContainer>
-            <h3>Select time</h3>
-            <input
+          <FlexContainer aria-labelledby="time-label">
+            <h3 id="time-label">Select time</h3>
+            <TimePicker
+              ref={timeInputRef}
               aria-label="Time"
               type="time"
-              min="12:00"
-              max="22:00"
+              min={minMaxTime.min}
+              max={minMaxTime.max}
               required
-              value={availableTime.toLocaleTimeString("it-IT", {
-                hour: "2-digit",
-                minute: "2-digit",
-                hour12: false,
-              })}
+              value={time}
+              onChange={e => setReservation(prev => ({ ...prev, time: e.target.value }))}
             />
           </FlexContainer>
 
-          <FlexContainer>
-            <h3>Select number of diners</h3>
+          <FlexContainer aria-labelledby="diners-label">
+            <h3 id="diners-label">Select number of diners</h3>
             <FlexContainer>
-              <FontAwesomeIcon icon={faSquareMinus} />
-              <span>1</span>
-              <FontAwesomeIcon icon={faSquarePlus} />
+              <CounterIcon
+                type="button"
+                disabled={dinersCount === minMaxDiners.min}
+                aria-label="Reduce diners"
+                onClick={() =>
+                  setReservation(prev => ({ ...prev, dinersCount: prev.dinersCount - 1 }))
+                }
+              >
+                <FontAwesomeIcon icon={faMinus} />
+              </CounterIcon>
+              <NumberDiners
+                type="number"
+                min={minMaxDiners.min}
+                max={minMaxDiners.max}
+                step="1"
+                value={dinersCount}
+                onChange={e =>
+                  setReservation(prev => ({ ...prev, dinersCount: parseInt(e.target.value) }))
+                }
+              />
+              <CounterIcon
+                type="button"
+                disabled={dinersCount === minMaxDiners.max}
+                aria-label="Increase diners"
+                onClick={() =>
+                  setReservation(prev => ({ ...prev, dinersCount: prev.dinersCount + 1 }))
+                }
+              >
+                <FontAwesomeIcon icon={faPlus} />
+              </CounterIcon>
             </FlexContainer>
           </FlexContainer>
-          <FlexContainer>
-            <h3>Select seating area</h3>
+          <FlexContainer aria-labelledby="seating-area-label">
+            <h3 id="seating-area-label">Select seating area</h3>
             <FlexContainer>
-              <input type="radio" name="indoor" checked defaultChecked />
-              <label htmlFor="indoor"> Indoor</label>
+              <FlexContainer>
+                <CustomRadioInput
+                  type="radio"
+                  name="seating"
+                  id="indoor"
+                  checked={isSeatingIndoor}
+                  onChange={() => setReservation(prev => ({ ...prev, isSeatingIndoor: true }))}
+                />
+                <label htmlFor="indoor"> Indoor</label>
+              </FlexContainer>
 
-              <input type="radio" name="outdoor" checked={false} />
-              <label htmlFor="outdoor">Outdoor</label>
+              <FlexContainer>
+                <CustomRadioInput
+                  type="radio"
+                  name="seating"
+                  id="outdoor"
+                  checked={!isSeatingIndoor}
+                  onChange={() => setReservation(prev => ({ ...prev, isSeatingIndoor: false }))}
+                />
+                <label htmlFor="outdoor">Outdoor</label>
+              </FlexContainer>
             </FlexContainer>
           </FlexContainer>
         </Container>
       </ReservationDetails>
-    </CustomSection>
+    </section>
   );
 };
 
