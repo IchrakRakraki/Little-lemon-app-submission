@@ -1,18 +1,26 @@
 import styled from "styled-components";
-import { Container, FlexContainer, Subtitle, type DateType, type Reservation } from "./BookingPage";
+import {
+  Container,
+  FlexContainer,
+  Subtitle,
+  type DateType,
+  type OccasionType,
+  type Reservation,
+  type TimesAction,
+} from "./BookingPage";
 import Calendar from "react-calendar";
 import "react-calendar/dist/Calendar.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faMinus, faPlus } from "@fortawesome/free-solid-svg-icons";
 import { media } from "../../styles/Theme";
-import { useEffect, useRef, useState, type Dispatch, type FC, type SetStateAction } from "react";
+import { useEffect, useRef, type Dispatch, type FC, type SetStateAction } from "react";
 import { minMaxDiners, minMaxTime } from "../../utils/constants";
 
 const ReservationDetails = styled.div`
-  ${({ theme }) => media.sm`
+  ${({ theme }) => media.md`
     display: grid;
     grid-template-columns: repeat(2, minmax(0, 1fr));
-    grid-gap: ${theme.spacing.lg}
+    grid-gap: ${theme.spacing.xl}
   `}
 `;
 
@@ -77,12 +85,22 @@ const CustomCalendar = styled(Calendar)`
     }
   }
 `;
-
+const GridContainer = styled.div`
+  display: grid;
+  grid-template-rows: repeat(4, 1fr);
+  grid-gap: ${({ theme }) => theme.spacing.md};
+  & > div {
+    align-self: start;
+    justify-self: start;
+    width: 100%;
+  }
+`;
 const TimePicker = styled.input`
   border: 2px solid ${({ theme }) => theme.color.primary.dark};
   padding: ${({ theme }) => theme.spacing.sm};
   border-radius: ${({ theme }) => theme.borderRadius.sm};
   outline: none;
+  justify-self: end;
   transition: background-color 0.2s outline 0.2s;
   &:active {
     background-color: ${({ theme }) => theme.color.highlight.light};
@@ -141,27 +159,60 @@ const CustomRadioInput = styled.input`
   accent-color: ${({ theme }) => theme.color.primary.dark};
   cursor: pointer;
 `;
+const SelectField = styled.select`
+  border: 2px solid ${({ theme }) => theme.color.primary.dark};
+  border-radius: ${({ theme }) => theme.borderRadius.sm};
+  padding: ${({ theme }) => theme.spacing.sm};
+  background-color: ${({ theme }) => theme.color.background};
+  color: ${({ theme }) => theme.color.text};
+  font-family: ${({ theme }) => theme.font.secondary};
+  font-size: ${({ theme }) => theme.fontSize.mdPlus};
+  cursor: pointer;
+  outline: none;
+  flex-basis: 30%;
+  text-align: center;
+  transition: all 0.2s ease;
+
+  &:hover {
+    background-color: ${({ theme }) => theme.color.highlight.light};
+  }
+
+  &:focus,
+  &:focus-visible {
+    outline: 4px solid ${({ theme }) => theme.color.highlight.light};
+  }
+
+  option {
+    color: ${({ theme }) => theme.color.primary.dark};
+    background-color: ${({ theme }) => theme.color.background};
+    font-size: ${({ theme }) => theme.fontSize.xs};
+  }
+`;
 
 type ReservationSectionProps = {
   reservation: Reservation;
   currentDate: Date;
   setReservation: Dispatch<SetStateAction<Reservation>>;
+  availableTimes: string[];
+  dispatchTimes: Dispatch<TimesAction>;
 };
 const ReservationSection: FC<ReservationSectionProps> = ({
   reservation,
   currentDate,
   setReservation,
+  availableTimes,
+  dispatchTimes,
 }) => {
   const timeInputRef = useRef<HTMLInputElement>(null);
-  const { date, time, dinersCount, isSeatingIndoor } = reservation;
+  const { date, dinersCount, isSeatingIndoor } = reservation;
 
   const maxReservationDate = new Date();
   maxReservationDate.setDate(currentDate.getDate() + 30);
 
-  const handleDateChange = (value: DateType, event: { type: string }) => {
+  const handleDateChange = (value: DateType) => {
     if (Array.isArray(value)) return;
-    console.log(event);
     setReservation(prev => ({ ...prev, date: value }));
+    dispatchTimes({ type: "UPDATE_TIMES", date: value });
     timeInputRef.current?.focus();
   };
   useEffect(() => {
@@ -174,8 +225,8 @@ const ReservationSection: FC<ReservationSectionProps> = ({
     <section id="bookingRsvDetails" aria-labelledby="reservation-details">
       <Subtitle id="reservation-details">Reservation details</Subtitle>
       <ReservationDetails>
-        <Container aria-labelledby="date-label">
-          <h3 id="date-label">Select date</h3>
+        <Container aria-labelledby="res-date">
+          <h3 id="res-date">Select date</h3>
           <CustomCalendar
             prev2Label={null}
             next2Label={null}
@@ -186,23 +237,25 @@ const ReservationSection: FC<ReservationSectionProps> = ({
             onChange={handleDateChange}
           />
         </Container>
-        <Container>
-          <FlexContainer aria-labelledby="time-label">
-            <h3 id="time-label">Select time</h3>
-            <TimePicker
-              ref={timeInputRef}
-              aria-label="Time"
-              type="time"
-              min={minMaxTime.min}
-              max={minMaxTime.max}
-              required
-              value={time}
-              onChange={e => setReservation(prev => ({ ...prev, time: e.target.value }))}
-            />
+        <GridContainer>
+          <FlexContainer>
+            <label htmlFor="res-time">
+              <h3>Select time</h3>
+            </label>
+            <SelectField
+              id="res-time"
+              onChange={e => setReservation(prev => ({ ...prev, time: e.target.value as string }))}
+            >
+              {availableTimes.map(timeSlot => (
+                <option key={timeSlot} value={timeSlot}>
+                  {timeSlot}
+                </option>
+              ))}
+            </SelectField>
           </FlexContainer>
 
-          <FlexContainer aria-labelledby="diners-label">
-            <h3 id="diners-label">Select number of diners</h3>
+          <FlexContainer aria-labelledby="res-guests" justifyChildEnd>
+            <h3 id="res-guests">Select number of diners</h3>
             <FlexContainer>
               <CounterIcon
                 type="button"
@@ -236,7 +289,7 @@ const ReservationSection: FC<ReservationSectionProps> = ({
               </CounterIcon>
             </FlexContainer>
           </FlexContainer>
-          <FlexContainer aria-labelledby="seating-area-label">
+          <FlexContainer aria-labelledby="seating-area-label" justifyChildEnd>
             <h3 id="seating-area-label">Select seating area</h3>
             <FlexContainer>
               <FlexContainer>
@@ -262,7 +315,21 @@ const ReservationSection: FC<ReservationSectionProps> = ({
               </FlexContainer>
             </FlexContainer>
           </FlexContainer>
-        </Container>
+          <FlexContainer>
+            <label htmlFor="occasion">
+              <h3>Select occasion</h3>
+            </label>
+            <SelectField
+              id="occasion"
+              onChange={e =>
+                setReservation(prev => ({ ...prev, occasion: e.target.value as OccasionType }))
+              }
+            >
+              <option value="birthday">Birthday</option>
+              <option value="anniversary">Anniversary</option>
+            </SelectField>
+          </FlexContainer>
+        </GridContainer>
       </ReservationDetails>
     </section>
   );

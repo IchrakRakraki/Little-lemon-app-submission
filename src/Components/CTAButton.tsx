@@ -1,9 +1,10 @@
+import { type MouseEvent } from "react";
 import styled from "styled-components";
 
 type ButtonProps = {
   buttonText: string;
-  type?: string;
-  onClick?: () => {};
+  type?: "button" | "submit" | "reset";
+  onClick: (e: MouseEvent<HTMLButtonElement>) => void;
 };
 
 const Button = styled.button<{ type?: string }>`

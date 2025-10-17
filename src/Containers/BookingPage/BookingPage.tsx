@@ -5,8 +5,7 @@ import { media } from "../../styles/Theme";
 import ReservationSection from "./ReservationSection";
 import ContactSection from "./ContactDetails";
 import CTAButton from "../../Components/CTAButton";
-import { useEffect, useState, type Dispatch, type SetStateAction } from "react";
-import { minMaxTime } from "../../utils/constants";
+import { useReducer, useState } from "react";
 
 const Thumbnail = styled.img`
   width: 100%;
@@ -27,7 +26,7 @@ const StyledForm = styled.form`
   ${media.xl`
     grid-column: 3/-3;
   `}
-  button {
+  & > button {
     justify-self: center;
     ${media.sm`
         place-self: end;
@@ -58,48 +57,64 @@ export const Container = styled.div<{ spacingValue?: "xs" | "md" }>`
   gap: ${({ theme, spacingValue = "md" }) => theme.spacing[spacingValue]};
 `;
 
-export const FlexContainer = styled.div<{ type?: "radio" }>`
+export const FlexContainer = styled.div<{ type?: "radio"; justifyChildEnd?: boolean }>`
   display: flex;
   justify-content: space-between;
   align-items: center;
   gap: ${({ theme, type }) => theme.spacing[type === "radio" ? "xs" : "sm"]};
   cursor: ${({ type }) => (type === "radio" ? "pointer" : "initial")};
   flex-wrap: wrap;
-  &:last-child {
-    justify-self: end;
+  & > div:last-child {
+    margin-left: ${({ justifyChildEnd }) => (justifyChildEnd ? "auto" : 0)};
   }
 `;
+
 type DateProp = Date | null;
 export type DateType = DateProp | [DateProp, DateProp];
-
+export type OccasionType = "Birthday" | "Anniversary";
 export type Reservation = {
   date: DateType;
   time: string;
   dinersCount: number;
   isSeatingIndoor: boolean;
+  occasion: OccasionType;
 };
-
-const Booking = () => {
-  const currentDate = new Date();
-  const availableTime = new Date(currentDate.getTime() + 15 * 60000);
-  const availableTimeString = availableTime.toLocaleTimeString("en-GB", {
-    hour: "2-digit",
-    minute: "2-digit",
-    hour12: false,
-  });
-  const getDefaultTime = (): string => {
-    const { min, max } = minMaxTime;
-    if (availableTimeString < min) return min;
-    if (availableTimeString > max) return max;
-    return availableTimeString;
+export type Contact = {
+  firstName: string;
+  lastName: string;
+  email: string;
+};
+export type TimesAction = { type: "UPDATE_TIMES"; date: string | null };
+export const initializeTimes: () => string[] = () => [
+  "17:00",
+  "18:00",
+  "19:00",
+  "20:00",
+  "21:00",
+  "22:00",
+];
+export const updateTimes = (date: string | null): string[] => {
+  return initializeTimes();
+};
+const BookingPage = () => {
+  const timesReducer = (state: string[], action: TimesAction) => {
+    switch (action.type) {
+      case "UPDATE_TIMES":
+        return updateTimes(action.date);
+      default:
+        return state;
+    }
   };
+  const [availableTimes, dispatchTimes] = useReducer(timesReducer, [], initializeTimes);
 
   const [reservation, setReservation] = useState<Reservation>({
     date: new Date(),
-    time: getDefaultTime(),
+    time: "",
     dinersCount: 1,
     isSeatingIndoor: true,
+    occasion: "Birthday",
   });
+  const [contact, setContact] = useState<Contact>({ firstName: "", lastName: "", email: "" });
 
   return (
     <>
@@ -109,15 +124,23 @@ const Booking = () => {
         <StyledForm>
           <ReservationSection
             reservation={reservation}
-            currentDate={currentDate}
+            currentDate={new Date()}
             setReservation={setReservation}
+            availableTimes={availableTimes}
+            dispatchTimes={dispatchTimes}
           />
-          <ContactSection />
-          <CTAButton buttonText="Submit Reservation" type="submit" />
+          <ContactSection contact={contact} setContact={setContact} />
+          <CTAButton
+            buttonText="Submit Reservation"
+            type="submit"
+            onClick={e => {
+              e.preventDefault();
+            }}
+          />
         </StyledForm>
       </ColumnGrid>
     </>
   );
 };
 
-export default Booking;
+export default BookingPage;

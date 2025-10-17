@@ -75,7 +75,7 @@ const Nav = () => {
             <a href="#menu">Menu</a>
           </NavLink>
           <NavLink>
-            <a href="#reservations">Reservations</a>
+            <a href="/booking">Reservations</a>
           </NavLink>
           <NavLink>
             <a href="#order">Order Online</a>
