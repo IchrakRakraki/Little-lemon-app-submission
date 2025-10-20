@@ -29,9 +29,9 @@ const StyledNav = styled.nav`
   `}
 `;
 
-const MobileIcon = styled.img<{ leftIcon?: boolean }>`
+const MobileIcon = styled.img<{ isLeftIcon?: boolean }>`
   width: 32px;
-  margin: ${({ leftIcon }) => (leftIcon ? "12px 12px 12px 0" : "12px 0 12px 12px")};
+  margin: ${({ isLeftIcon }) => (isLeftIcon ? "12px 12px 12px 0" : "12px 0 12px 12px")};
   ${media.md`
         display: none;
     `};
@@ -61,9 +61,9 @@ const Nav = () => {
   return (
     <ColumnGrid>
       <StyledNav>
-        <MobileIcon src={hamburgerIcon} alt="Hamberger menu icon." leftIcon />
+        <MobileIcon src={hamburgerIcon} alt="Hamberger menu icon." isLeftIcon />
         <img src={logo} alt="Little Lemon restautant logo." />
-        <MobileIcon src={basketIcon} alt="Hamberger menu icon." />
+        <MobileIcon src={basketIcon} alt="Basket icon." />
         <NavLinks>
           <NavLink>
             <a href="#home">Home</a>

@@ -7,6 +7,8 @@ import ContactSection from "./ContactDetails";
 import CTAButton from "../../Components/CTAButton";
 import { useReducer, useState } from "react";
 
+declare function fetchAPI(date: Date): string[];
+
 const Thumbnail = styled.img`
   width: 100%;
   height: 250px;
@@ -84,17 +86,13 @@ export type Contact = {
   lastName: string;
   email: string;
 };
-export type TimesAction = { type: "UPDATE_TIMES"; date: string | null };
-export const initializeTimes: () => string[] = () => [
-  "17:00",
-  "18:00",
-  "19:00",
-  "20:00",
-  "21:00",
-  "22:00",
-];
-export const updateTimes = (date: string | null): string[] => {
-  return initializeTimes();
+export type TimesAction = { type: "UPDATE_TIMES"; date: Date };
+export const initializeTimes: () => string[] = () => {
+  const today = new Date();
+  return fetchAPI(today);
+};
+export const updateTimes = (date: Date): string[] => {
+  return fetchAPI(date);
 };
 const BookingPage = () => {
   const timesReducer = (state: string[], action: TimesAction) => {
