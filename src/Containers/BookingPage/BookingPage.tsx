@@ -19,7 +19,7 @@ const StyledForm = styled.form`
   display: flex;
   flex-direction: column;
   gap: ${({ theme }) => theme.spacing.xl};
-  padding: ${({ theme }) => theme.spacing.lg} 0;
+  padding: ${({ theme }) => theme.spacing.lg} 0 5rem;
   ${media.sm`
     grid-column: 1/-1;
   `}
