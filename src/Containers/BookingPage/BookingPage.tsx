@@ -9,6 +9,7 @@ import CTAButton from "../../Components/CTAButton";
 import { useReducer, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { initializeTimes, updateTimes } from "../../utils/bookingUtils";
+import { useFormValidation } from "../../hooks/useFormValidation";
 
 const Thumbnail = styled.img`
   width: 100%;
@@ -110,6 +111,7 @@ const BookingPage = () => {
     occasion: "Birthday",
   });
   const [contact, setContact] = useState<Contact>({ firstName: "", lastName: "", email: "" });
+  const isSubmitDisabled = useFormValidation(reservation, contact);
   const navigate = useNavigate();
 
   const handleSubmitForm = (e: React.MouseEvent<HTMLButtonElement>): void => {
@@ -131,7 +133,12 @@ const BookingPage = () => {
             dispatchTimes={dispatchTimes}
           />
           <ContactSection contact={contact} setContact={setContact} />
-          <CTAButton buttonText="Submit Reservation" type="submit" onClick={handleSubmitForm} />
+          <CTAButton
+            buttonText="Submit Reservation"
+            type="submit"
+            disabled={isSubmitDisabled}
+            onClick={handleSubmitForm}
+          />
         </StyledForm>
       </ColumnGrid>
     </>
