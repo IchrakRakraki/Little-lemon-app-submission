@@ -44,7 +44,7 @@ const ContactSection: FC<ContactSectionProps> = ({ contact, setContact }) => {
       <Subtitle>Contact Information</Subtitle>
       <ContactDetails>
         <Container>
-          <Container spacingValue="xs">
+          <Container $spacingValue="xs">
             <label htmlFor="firstName">
               <h3>First Name *</h3>
             </label>
@@ -56,7 +56,7 @@ const ContactSection: FC<ContactSectionProps> = ({ contact, setContact }) => {
               required
             />
           </Container>
-          <Container spacingValue="xs">
+          <Container $spacingValue="xs">
             <label htmlFor="lastName">
               <h3>Last Name *</h3>
             </label>
@@ -68,7 +68,7 @@ const ContactSection: FC<ContactSectionProps> = ({ contact, setContact }) => {
               required
             />
           </Container>
-          <Container spacingValue="xs">
+          <Container $spacingValue="xs">
             <label htmlFor="email">
               <h3>Email Address *</h3>
             </label>

@@ -1,3 +1,4 @@
+import React from "react";
 import { ColumnGrid } from "../../styles/StyledComponents";
 import tableReservationImage from "../../assets/table-reservation.jpg";
 import styled from "styled-components";
@@ -6,8 +7,8 @@ import ReservationSection from "./ReservationSection";
 import ContactSection from "./ContactDetails";
 import CTAButton from "../../Components/CTAButton";
 import { useReducer, useState } from "react";
-
-declare function fetchAPI(date: Date): string[];
+import { useNavigate } from "react-router-dom";
+import { initializeTimes, updateTimes } from "../../utils/bookingUtils";
 
 const Thumbnail = styled.img`
   width: 100%;
@@ -53,13 +54,13 @@ export const Subtitle = styled.h2`
   color: ${({ theme }) => theme.color.primary.dark};
 `;
 
-export const Container = styled.div<{ spacingValue?: "xs" | "md" }>`
+export const Container = styled.div<{ $spacingValue?: "xs" | "md" }>`
   display: flex;
   flex-direction: column;
-  gap: ${({ theme, spacingValue = "md" }) => theme.spacing[spacingValue]};
+  gap: ${({ theme, $spacingValue = "md" }) => theme.spacing[$spacingValue]};
 `;
 
-export const FlexContainer = styled.div<{ type?: "radio"; justifyChildEnd?: boolean }>`
+export const FlexContainer = styled.div<{ type?: "radio"; $justifyChildEnd?: boolean }>`
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -67,9 +68,11 @@ export const FlexContainer = styled.div<{ type?: "radio"; justifyChildEnd?: bool
   cursor: ${({ type }) => (type === "radio" ? "pointer" : "initial")};
   flex-wrap: wrap;
   & > div:last-child {
-    margin-left: ${({ justifyChildEnd }) => (justifyChildEnd ? "auto" : 0)};
+    margin-left: ${({ $justifyChildEnd }) => ($justifyChildEnd ? "auto" : 0)};
   }
 `;
+
+declare function submitAPI(formData: object): boolean;
 
 type DateProp = Date | null;
 export type DateType = DateProp | [DateProp, DateProp];
@@ -86,14 +89,8 @@ export type Contact = {
   lastName: string;
   email: string;
 };
-export type TimesAction = { type: "UPDATE_TIMES"; date: Date };
-export const initializeTimes: () => string[] = () => {
-  const today = new Date();
-  return fetchAPI(today);
-};
-export const updateTimes = (date: Date): string[] => {
-  return fetchAPI(date);
-};
+export type TimesAction = { type: "UPDATE_TIMES"; date: DateType };
+
 const BookingPage = () => {
   const timesReducer = (state: string[], action: TimesAction) => {
     switch (action.type) {
@@ -113,7 +110,13 @@ const BookingPage = () => {
     occasion: "Birthday",
   });
   const [contact, setContact] = useState<Contact>({ firstName: "", lastName: "", email: "" });
+  const navigate = useNavigate();
 
+  const handleSubmitForm = (e: React.MouseEvent<HTMLButtonElement>): void => {
+    e.preventDefault();
+    const isSuccessful = submitAPI({ ...reservation, ...contact });
+    if (isSuccessful) navigate("/confirmation");
+  };
   return (
     <>
       <Thumbnail src={tableReservationImage} alt="Decorative restaurant table" />
@@ -128,13 +131,7 @@ const BookingPage = () => {
             dispatchTimes={dispatchTimes}
           />
           <ContactSection contact={contact} setContact={setContact} />
-          <CTAButton
-            buttonText="Submit Reservation"
-            type="submit"
-            onClick={e => {
-              e.preventDefault();
-            }}
-          />
+          <CTAButton buttonText="Submit Reservation" type="submit" onClick={handleSubmitForm} />
         </StyledForm>
       </ColumnGrid>
     </>

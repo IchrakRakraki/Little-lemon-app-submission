@@ -14,7 +14,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faMinus, faPlus } from "@fortawesome/free-solid-svg-icons";
 import { media } from "../../styles/Theme";
 import { useEffect, useRef, type Dispatch, type FC, type SetStateAction } from "react";
-import { minMaxDiners, minMaxTime } from "../../utils/constants";
+import { minMaxDiners } from "../../utils/constants";
 
 const ReservationDetails = styled.div`
   ${({ theme }) => media.md`
@@ -95,21 +95,21 @@ const GridContainer = styled.div`
     width: 100%;
   }
 `;
-const TimePicker = styled.input`
-  border: 2px solid ${({ theme }) => theme.color.primary.dark};
-  padding: ${({ theme }) => theme.spacing.sm};
-  border-radius: ${({ theme }) => theme.borderRadius.sm};
-  outline: none;
-  justify-self: end;
-  transition: background-color 0.2s outline 0.2s;
-  &:active {
-    background-color: ${({ theme }) => theme.color.highlight.light};
-  }
-  &:focus,
-  &:focus-visible {
-    outline: 4px solid ${({ theme }) => theme.color.highlight.light};
-  }
-`;
+// const TimePicker = styled.input`
+//   border: 2px solid ${({ theme }) => theme.color.primary.dark};
+//   padding: ${({ theme }) => theme.spacing.sm};
+//   border-radius: ${({ theme }) => theme.borderRadius.sm};
+//   outline: none;
+//   justify-self: end;
+//   transition: background-color 0.2s outline 0.2s;
+//   &:active {
+//     background-color: ${({ theme }) => theme.color.highlight.light};
+//   }
+//   &:focus,
+//   &:focus-visible {
+//     outline: 4px solid ${({ theme }) => theme.color.highlight.light};
+//   }
+// `;
 
 const CounterIcon = styled.button`
   cursor: pointer;
@@ -218,7 +218,7 @@ const ReservationSection: FC<ReservationSectionProps> = ({
   useEffect(() => {
     // Remove month label from keyboard navigation
     const calendarLabelBtn = document.querySelector(".react-calendar__navigation__label");
-    calendarLabelBtn !== null && calendarLabelBtn.setAttribute("tab-index", "-1");
+    if (calendarLabelBtn) calendarLabelBtn.setAttribute("tabindex", "-1");
   }, []);
 
   return (
@@ -254,7 +254,7 @@ const ReservationSection: FC<ReservationSectionProps> = ({
             </SelectField>
           </FlexContainer>
 
-          <FlexContainer aria-labelledby="res-guests" justifyChildEnd>
+          <FlexContainer aria-labelledby="res-guests" $justifyChildEnd>
             <h3 id="res-guests">Select number of diners</h3>
             <FlexContainer>
               <CounterIcon
@@ -289,7 +289,7 @@ const ReservationSection: FC<ReservationSectionProps> = ({
               </CounterIcon>
             </FlexContainer>
           </FlexContainer>
-          <FlexContainer aria-labelledby="seating-area-label" justifyChildEnd>
+          <FlexContainer aria-labelledby="seating-area-label" $justifyChildEnd>
             <h3 id="seating-area-label">Select seating area</h3>
             <FlexContainer>
               <FlexContainer>

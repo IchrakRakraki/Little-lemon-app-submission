@@ -1,9 +1,10 @@
-import { type MouseEvent } from "react";
+import type { MouseEvent, FC } from "react";
 import styled from "styled-components";
 
 type ButtonProps = {
   buttonText: string;
   type?: "button" | "submit" | "reset";
+  // eslint-disable-next-line no-unused-vars
   onClick: (e: MouseEvent<HTMLButtonElement>) => void;
 };
 
@@ -20,7 +21,7 @@ const Button = styled.button<{ type?: string }>`
   height: auto;
 `;
 
-const CTAButton: React.FC<ButtonProps> = ({ buttonText, type = "button", onClick }) => {
+const CTAButton: FC<ButtonProps> = ({ buttonText, type = "button", onClick }) => {
   return (
     <Button type={type} onClick={onClick}>
       {buttonText}

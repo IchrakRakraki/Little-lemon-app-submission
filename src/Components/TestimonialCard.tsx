@@ -1,3 +1,4 @@
+import { type FC } from "react";
 import styled from "styled-components";
 import Rating from "./Rating";
 
@@ -49,7 +50,7 @@ type TestimonialCardProps = {
   review: string;
 };
 
-const TestimonialCard: React.FC<TestimonialCardProps> = ({
+const TestimonialCard: FC<TestimonialCardProps> = ({
   rating,
   avatar,
   fullName,

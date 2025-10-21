@@ -1,3 +1,4 @@
+import React, { type FC } from "react";
 import styled from "styled-components";
 import { media } from "../styles/Theme";
 import delivery from "../assets/delivery.svg";
@@ -52,7 +53,7 @@ type CardProps = {
   altText: string;
 };
 
-const Card: React.FC<CardProps> = ({ title, price, description, imgSrc, altText }) => {
+const Card: FC<CardProps> = ({ title, price, description, imgSrc, altText }) => {
   return (
     <MenuItem>
       <Thumbnail src={imgSrc} alt={altText} />

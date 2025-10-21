@@ -1,4 +1,4 @@
-import type { FC } from "react";
+import type { FC, ReactNode } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import styled from "styled-components";
 
@@ -14,9 +14,12 @@ type RatingProps = {
 };
 
 const Rating: FC<RatingProps> = ({ starsCount }) => {
-  let icons = [];
+  let icons: ReactNode[] = [];
   for (let i = 1; i <= 5; i++) {
-    icons.push(<StyledIcon key={i} icon={i <= starsCount ? ["fas", "star"] : ["far", "star"]} />);
+    const newIcon = (
+      <StyledIcon key={i} icon={i <= starsCount ? ["fas", "star"] : ["far", "star"]} />
+    );
+    icons = [...icons, newIcon];
   }
   return <div>{icons}</div>;
 };
