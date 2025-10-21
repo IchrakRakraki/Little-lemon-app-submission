@@ -13,6 +13,10 @@ const StyledNav = styled.nav`
   align-items: center;
   justify-content: space-between;
   margin: ${({ theme }) => theme.spacing.sm} 0;
+  background-color: ${({ theme }) => theme.color.background};
+  position: sticky;
+  z-index: 2;
+  top: 0;
   ${({ theme }) => media.md`
     display: grid;
     width: 100%;
@@ -66,7 +70,7 @@ const Nav = () => {
         <MobileIcon src={basketIcon} alt="Basket icon." />
         <NavLinks>
           <NavLink>
-            <a href="#home">Home</a>
+            <a href="/">Home</a>
           </NavLink>
           <NavLink>
             <a href="#about">About</a>

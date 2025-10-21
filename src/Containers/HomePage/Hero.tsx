@@ -3,6 +3,7 @@ import heroImage from "../../assets/restauranfood.jpg";
 import { media } from "../../styles/Theme";
 import CTAButton from "../../Components/CTAButton";
 import { ColumnGrid } from "../../styles/StyledComponents";
+import { useNavigate } from "react-router-dom";
 
 const HeroSection = styled.section`
   background-color: ${({ theme }) => theme.color.primary.dark};
@@ -70,25 +71,28 @@ const HeroImage = styled.img`
   `}
 `;
 
-const Hero = () => (
-  <HeroSection id="hero">
-    <ColumnGrid>
-      <HeroTextContent>
-        <Title>Little Lemon</Title>
-        <Subtitle>Chicago</Subtitle>
-        <Description>
-          We are a family owned Mediterranean restaurant focused on traditional recipes served with
-          a modern twist.
-        </Description>
-        <CTAButton buttonText="Reserve a Table" />
-      </HeroTextContent>
-      <ImageContainer>
-        <HeroImage
-          src={heroImage}
-          alt="Three tomato and basil Bruschettas presented on a black plate"
-        />
-      </ImageContainer>
-    </ColumnGrid>
-  </HeroSection>
-);
+const Hero = () => {
+  const navigate = useNavigate();
+  return (
+    <HeroSection id="hero">
+      <ColumnGrid>
+        <HeroTextContent>
+          <Title>Little Lemon</Title>
+          <Subtitle>Chicago</Subtitle>
+          <Description>
+            We are a family owned Mediterranean restaurant focused on traditional recipes served
+            with a modern twist.
+          </Description>
+          <CTAButton buttonText="Reserve a Table" onClick={() => navigate("/booking")} />
+        </HeroTextContent>
+        <ImageContainer>
+          <HeroImage
+            src={heroImage}
+            alt="Three tomato and basil Bruschettas presented on a black plate"
+          />
+        </ImageContainer>
+      </ColumnGrid>
+    </HeroSection>
+  );
+};
 export default Hero;

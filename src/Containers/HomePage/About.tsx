@@ -46,14 +46,14 @@ const ThumbnailSection = styled.div`
     `}
 `;
 
-const AboutImage = styled.img<{ bottomImg?: boolean }>`
+const AboutImage = styled.img<{ $bottomImg?: boolean }>`
   width: 250px;
   height: 330px;
   float: right;
-  position: ${({ bottomImg }) => (bottomImg ? "absolute" : "initial")};
+  position: ${({ $bottomImg }) => ($bottomImg ? "absolute" : "initial")};
   left: 0;
-  top: ${({ bottomImg }) => (bottomImg ? "75px" : 0)};
-  z-index: ${({ bottomImg }) => (bottomImg ? -1 : 0)};
+  top: ${({ $bottomImg }) => ($bottomImg ? "75px" : 0)};
+  z-index: ${({ $bottomImg }) => ($bottomImg ? -1 : 0)};
   border-radius: ${({ theme }) => theme.borderRadius.md};
   box-shadow: ${({ theme }) => theme.boxShadow.img};
 `;
@@ -90,7 +90,7 @@ const About = () => (
           alt={
             "Well-lit restaurant interior with a terrace and scenic view, featuring a central tree, a light purple sofa with green and blue pillows, bamboo seating with an industrial touch, and chairs with light terracotta leather cushions, alongside tables and a bar area."
           }
-          bottomImg
+          $bottomImg
         />
       </ThumbnailSection>
     </ColumnGrid>

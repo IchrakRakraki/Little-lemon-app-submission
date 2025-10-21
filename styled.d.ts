@@ -24,10 +24,10 @@ declare module "styled-components" {
       secondary: string;
     };
     fontWeight: {
-      regular: string;
-      medium: string;
-      semiBold: string;
-      bold: string;
+      regular: number;
+      medium: number;
+      semiBold: number;
+      bold: number;
     };
     borderRadius: {
       sm: string;

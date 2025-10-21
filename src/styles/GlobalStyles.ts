@@ -17,7 +17,7 @@ export const GlobalStyles = createGlobalStyle`
     font-size: ${({ theme }) => theme.fontSize.xs};
   }
 
-  section:not(:first-child){
+  section:not(#hero){
     padding: 5rem 0 6rem;
   }
 

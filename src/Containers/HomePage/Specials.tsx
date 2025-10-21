@@ -44,9 +44,8 @@ const Specials = () => (
       <Content>
         <SectionHeader>
           <h1>This week's specials!</h1>
-          <CTAButton buttonText="Online Menu" />
+          <CTAButton buttonText="Online Menu" onClick={() => console.log("Menu")} />
         </SectionHeader>
-
         {weekSpecials.map(item => (
           <Card key={item.id} {...item} />
         ))}
