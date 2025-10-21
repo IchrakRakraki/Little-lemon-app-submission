@@ -17,12 +17,12 @@ export const GlobalStyles = createGlobalStyle`
     font-size: ${({ theme }) => theme.fontSize.xs};
   }
 
-  section:not(#hero){
+  section:not(.hero){
     padding: 5rem 0 6rem;
   }
 
   #bookingRsvDetails, #bookingContactDetails {
-    padding: 0 ;
+    padding: 0;
   }
 
   footer {

@@ -13,10 +13,6 @@ const StyledNav = styled.nav`
   align-items: center;
   justify-content: space-between;
   margin: ${({ theme }) => theme.spacing.sm} 0;
-  background-color: ${({ theme }) => theme.color.background};
-  position: sticky;
-  z-index: 2;
-  top: 0;
   ${({ theme }) => media.md`
     display: grid;
     width: 100%;
@@ -60,7 +56,7 @@ const NavLink = styled.li`
   font-weight: ${({ theme }) => theme.fontWeight.medium};
   font-size: ${({ theme }) => theme.fontSize.sm};
 `;
-
+// TODO: add menu for mobile devices
 const Nav = () => {
   return (
     <ColumnGrid>

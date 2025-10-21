@@ -74,7 +74,7 @@ const HeroImage = styled.img`
 const Hero = () => {
   const navigate = useNavigate();
   return (
-    <HeroSection id="hero">
+    <HeroSection id="hero" className="hero">
       <ColumnGrid>
         <HeroTextContent>
           <Title>Little Lemon</Title>

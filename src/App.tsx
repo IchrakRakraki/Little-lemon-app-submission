@@ -10,19 +10,19 @@ import Footer from "./Containers/Footer";
 import { BrowserRouter } from "react-router-dom";
 
 library.add(faStarSolid, faStarRegular);
+
 const StickyPos = styled.div`
   background-color: ${({ theme }) => theme.color.background};
   position: sticky;
   z-index: 1;
   top: 0;
 `;
+
 function App() {
   return (
     <ThemeProvider theme={theme}>
       <BrowserRouter>
         <GlobalStyles />
-        {/* <Header /> */}
-
         <StickyPos>
           <Nav />
         </StickyPos>
