@@ -4,9 +4,11 @@ import {
   FlexContainer,
   Subtitle,
   type DateType,
+  type ErrorType,
   type OccasionType,
   type Reservation,
   type TimesAction,
+  type Touched,
 } from "./BookingPage";
 import Calendar from "react-calendar";
 import "react-calendar/dist/Calendar.css";
@@ -15,6 +17,7 @@ import { faMinus, faPlus } from "@fortawesome/free-solid-svg-icons";
 import { media } from "../../styles/Theme";
 import { useEffect, useRef, type Dispatch, type FC, type SetStateAction } from "react";
 import { minMaxDiners } from "../../utils/constants";
+import { ErrorMessage } from "../../styles/StyledComponents";
 
 const ReservationDetails = styled.div`
   ${({ theme }) => media.md`
@@ -88,7 +91,7 @@ const CustomCalendar = styled(Calendar)`
 const GridContainer = styled.div`
   display: grid;
   grid-template-rows: repeat(4, 1fr);
-  grid-gap: ${({ theme }) => theme.spacing.md};
+  grid-gap: ${({ theme }) => theme.spacing.lg};
   & > div {
     align-self: start;
     justify-self: start;
@@ -138,11 +141,12 @@ const CounterIcon = styled.button`
   }
 `;
 
-const NumberDiners = styled.input`
+const NumberDiners = styled.input<{ $error: boolean }>`
   -webkit-appearance: none;
   -moz-appearance: textfield;
   padding: ${({ theme }) => theme.spacing.sm};
-  border: 2px solid ${({ theme }) => theme.color.primary.dark};
+  border: 2px solid
+    ${({ theme, $error }) => ($error ? theme.color.error : theme.color.primary.dark)};
   border-radius: ${({ theme }) => theme.borderRadius.sm};
   width: 6ch;
   text-align: center;
@@ -195,6 +199,9 @@ type ReservationSectionProps = {
   setReservation: Dispatch<SetStateAction<Reservation>>;
   availableTimes: string[];
   dispatchTimes: Dispatch<TimesAction>;
+  errors: ErrorType;
+  touched: Touched;
+  setTouched: Dispatch<SetStateAction<Touched>>;
 };
 const ReservationSection: FC<ReservationSectionProps> = ({
   reservation,
@@ -202,6 +209,9 @@ const ReservationSection: FC<ReservationSectionProps> = ({
   setReservation,
   availableTimes,
   dispatchTimes,
+  errors,
+  touched,
+  setTouched,
 }) => {
   const timeInputRef = useRef<HTMLInputElement>(null);
   const { date, dinersCount, isSeatingIndoor } = reservation;
@@ -221,12 +231,30 @@ const ReservationSection: FC<ReservationSectionProps> = ({
     if (calendarLabelBtn) calendarLabelBtn.setAttribute("tabindex", "-1");
   }, []);
 
+  const handleDinerCountChange = (key: "increase" | "decrease" | "update", value?: number) => {
+    if (key) setTouched(prev => ({ ...prev, dinersCount: true }));
+    switch (key) {
+      case "decrease":
+        setReservation(prev => ({ ...prev, dinersCount: prev.dinersCount - 1 }));
+        break;
+      case "update":
+        console.log({ value });
+        if (value !== undefined) setReservation(prev => ({ ...prev, dinersCount: value }));
+        break;
+      case "increase":
+        setReservation(prev => ({ ...prev, dinersCount: prev.dinersCount + 1 }));
+        break;
+      default:
+        break;
+    }
+  };
+
   return (
     <section id="bookingRsvDetails" aria-labelledby="reservation-details">
       <Subtitle id="reservation-details">Reservation details</Subtitle>
       <ReservationDetails>
         <Container aria-labelledby="res-date">
-          <h3 id="res-date">Select date</h3>
+          <h3 id="res-date">Select date *</h3>
           <CustomCalendar
             prev2Label={null}
             next2Label={null}
@@ -240,7 +268,7 @@ const ReservationSection: FC<ReservationSectionProps> = ({
         <GridContainer>
           <FlexContainer>
             <label htmlFor="res-time">
-              <h3>Select time</h3>
+              <h3>Select time *</h3>
             </label>
             <SelectField
               id="res-time"
@@ -254,16 +282,17 @@ const ReservationSection: FC<ReservationSectionProps> = ({
             </SelectField>
           </FlexContainer>
 
-          <FlexContainer aria-labelledby="res-guests" $justifyChildEnd>
-            <h3 id="res-guests">Select number of diners</h3>
+          <FlexContainer aria-labelledby="res-guests" $justifyChildEnd $isRelative>
+            <h3 id="res-guests">Select number of diners *</h3>
+            {errors.dinersCount !== "" && touched.dinersCount && (
+              <ErrorMessage>{errors.dinersCount}</ErrorMessage>
+            )}
             <FlexContainer>
               <CounterIcon
                 type="button"
-                disabled={dinersCount === minMaxDiners.min}
+                disabled={dinersCount <= minMaxDiners.min}
                 aria-label="Reduce diners"
-                onClick={() =>
-                  setReservation(prev => ({ ...prev, dinersCount: prev.dinersCount - 1 }))
-                }
+                onClick={() => handleDinerCountChange("decrease")}
               >
                 <FontAwesomeIcon icon={faMinus} />
               </CounterIcon>
@@ -273,17 +302,14 @@ const ReservationSection: FC<ReservationSectionProps> = ({
                 max={minMaxDiners.max}
                 step="1"
                 value={dinersCount}
-                onChange={e =>
-                  setReservation(prev => ({ ...prev, dinersCount: parseInt(e.target.value) }))
-                }
+                onChange={e => handleDinerCountChange("update", Number(e.target.value))}
+                $error={errors.dinersCount !== "" && touched.dinersCount}
               />
               <CounterIcon
                 type="button"
-                disabled={dinersCount === minMaxDiners.max}
+                disabled={dinersCount >= minMaxDiners.max}
                 aria-label="Increase diners"
-                onClick={() =>
-                  setReservation(prev => ({ ...prev, dinersCount: prev.dinersCount + 1 }))
-                }
+                onClick={() => handleDinerCountChange("increase")}
               >
                 <FontAwesomeIcon icon={faPlus} />
               </CounterIcon>
@@ -292,7 +318,7 @@ const ReservationSection: FC<ReservationSectionProps> = ({
           <FlexContainer aria-labelledby="seating-area-label" $justifyChildEnd>
             <h3 id="seating-area-label">Select seating area</h3>
             <FlexContainer>
-              <FlexContainer>
+              <FlexContainer $type="radio">
                 <CustomRadioInput
                   type="radio"
                   name="seating"
@@ -303,7 +329,7 @@ const ReservationSection: FC<ReservationSectionProps> = ({
                 <label htmlFor="indoor"> Indoor</label>
               </FlexContainer>
 
-              <FlexContainer>
+              <FlexContainer $type="radio">
                 <CustomRadioInput
                   type="radio"
                   name="seating"

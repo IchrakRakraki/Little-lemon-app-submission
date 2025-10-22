@@ -14,3 +14,9 @@ export const ColumnGrid = styled.div`
     margin: 0 70px;
     `}
 `;
+
+export const ErrorMessage = styled.span`
+  color: ${({ theme }) => theme.color.error};
+  font-size: ${({ theme }) => theme.fontSize.xs};
+  flex-basis: 100%;
+`;

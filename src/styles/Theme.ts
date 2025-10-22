@@ -18,6 +18,7 @@ export const theme = {
     text: "#333333",
     mutedText: "#6E6F6E",
     background: "#FFFFFF",
+    error: "#b50000",
   },
   font: {
     primary: "'Karla', sans-serif",

@@ -9,6 +9,7 @@ declare module "styled-components" {
       text: string;
       mutedText: string;
       background: string;
+      error: string;
     };
     fontSize: {
       xxs: string;

@@ -55,21 +55,37 @@ export const Subtitle = styled.h2`
   color: ${({ theme }) => theme.color.primary.dark};
 `;
 
-export const Container = styled.div<{ $spacingValue?: "xs" | "md" }>`
+export const Container = styled.div<{ $spacingValue?: "xs" | "lg" }>`
   display: flex;
   flex-direction: column;
-  gap: ${({ theme, $spacingValue = "md" }) => theme.spacing[$spacingValue]};
+  gap: ${({ theme, $spacingValue = "lg" }) => theme.spacing[$spacingValue]};
+  position: ${({ $spacingValue = "lg" }) => ($spacingValue === "lg" ? "initial" : "relative")};
+  & > span {
+    position: absolute;
+    top: 100%;
+  }
 `;
 
-export const FlexContainer = styled.div<{ type?: "radio"; $justifyChildEnd?: boolean }>`
+export const FlexContainer = styled.div<{
+  $type?: "radio";
+  $isRelative?: boolean;
+  $justifyChildEnd?: boolean;
+}>`
   display: flex;
   justify-content: space-between;
   align-items: center;
-  gap: ${({ theme, type }) => theme.spacing[type === "radio" ? "xs" : "sm"]};
-  cursor: ${({ type }) => (type === "radio" ? "pointer" : "initial")};
+  gap: ${({ theme, $type }) => theme.spacing[$type === "radio" ? "xs" : "sm"]};
+  position: ${({ $isRelative }) => ($isRelative ? "relative" : "initial")};
   flex-wrap: wrap;
   & > div:last-child {
     margin-left: ${({ $justifyChildEnd }) => ($justifyChildEnd ? "auto" : 0)};
+  }
+  & > label {
+    cursor: ${({ $type }) => ($type === "radio" ? "pointer" : "initial")};
+  }
+  & > span {
+    position: absolute;
+    top: 100%;
   }
 `;
 
@@ -90,6 +106,18 @@ export type Contact = {
   lastName: string;
   email: string;
 };
+export type ErrorType = {
+  firstName: string;
+  lastName: string;
+  email: string;
+  dinersCount: string;
+};
+export type Touched = {
+  firstName: boolean;
+  lastName: boolean;
+  email: boolean;
+  dinersCount: boolean;
+};
 export type TimesAction = { type: "UPDATE_TIMES"; date: DateType };
 
 const BookingPage = () => {
@@ -102,7 +130,6 @@ const BookingPage = () => {
     }
   };
   const [availableTimes, dispatchTimes] = useReducer(timesReducer, [], initializeTimes);
-
   const [reservation, setReservation] = useState<Reservation>({
     date: new Date(),
     time: "",
@@ -111,7 +138,14 @@ const BookingPage = () => {
     occasion: "Birthday",
   });
   const [contact, setContact] = useState<Contact>({ firstName: "", lastName: "", email: "" });
-  const isSubmitDisabled = useFormValidation(reservation, contact);
+  const [touched, setTouched] = useState({
+    firstName: false,
+    lastName: false,
+    email: false,
+    dinersCount: false,
+  });
+
+  const { isSubmitDisabled, errors } = useFormValidation(reservation, contact, touched);
   const navigate = useNavigate();
 
   const handleSubmitForm = (e: React.MouseEvent<HTMLButtonElement>): void => {
@@ -131,8 +165,17 @@ const BookingPage = () => {
             setReservation={setReservation}
             availableTimes={availableTimes}
             dispatchTimes={dispatchTimes}
+            errors={errors}
+            touched={touched}
+            setTouched={setTouched}
           />
-          <ContactSection contact={contact} setContact={setContact} />
+          <ContactSection
+            contact={contact}
+            setContact={setContact}
+            errors={errors}
+            touched={touched}
+            setTouched={setTouched}
+          />
           <CTAButton
             buttonText="Submit Reservation"
             type="submit"
