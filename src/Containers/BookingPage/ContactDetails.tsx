@@ -2,7 +2,7 @@ import React from "react";
 import styled from "styled-components";
 import { Container, Subtitle, type Contact, type ErrorType, type Touched } from "./BookingPage";
 import { media } from "../../styles/Theme";
-import type { Dispatch, FC, SetStateAction } from "react";
+import type { ChangeEvent, FocusEvent, Dispatch, FC, SetStateAction } from "react";
 import { ErrorMessage } from "../../styles/StyledComponents";
 
 const ContactDetails = styled.div`
@@ -48,11 +48,11 @@ const ContactSection: FC<ContactSectionProps> = ({
   setTouched,
 }) => {
   const { firstName, lastName, email } = contact;
-  const handleTextField = (event: React.FocusEvent<HTMLInputElement>) => {
+  const handleTextField = (event: ChangeEvent<HTMLInputElement>) => {
     const { name, value } = event.target;
     setContact(prev => ({ ...prev, [name]: value }));
   };
-  const handleOnBlur = (event: React.FocusEvent<HTMLInputElement>) => {
+  const handleOnBlur = (event: FocusEvent<HTMLInputElement>) => {
     const { name } = event.target as { name: keyof Touched };
     setTouched(prev => (!prev[name] ? { ...prev, [name]: true } : prev));
   };
@@ -63,11 +63,12 @@ const ContactSection: FC<ContactSectionProps> = ({
         <Container>
           <Container $spacingValue="xs">
             <label htmlFor="firstName">
-              <h3>First Name *</h3>
+              <h3>First Name</h3>
             </label>
             <CustomInput
               type="text"
               name="firstName"
+              id="firstName"
               value={firstName}
               onChange={handleTextField}
               onBlur={handleOnBlur}
@@ -80,11 +81,12 @@ const ContactSection: FC<ContactSectionProps> = ({
           </Container>
           <Container $spacingValue="xs">
             <label htmlFor="lastName">
-              <h3>Last Name *</h3>
+              <h3>Last Name</h3>
             </label>
             <CustomInput
               type="text"
               name="lastName"
+              id="lastName"
               value={lastName}
               onChange={handleTextField}
               onBlur={handleOnBlur}
@@ -97,11 +99,12 @@ const ContactSection: FC<ContactSectionProps> = ({
           </Container>
           <Container $spacingValue="xs">
             <label htmlFor="email">
-              <h3>Email Address *</h3>
+              <h3>Email Address</h3>
             </label>
             <CustomInput
               type="email"
               name="email"
+              id="email"
               value={email}
               onChange={handleTextField}
               onBlur={handleOnBlur}

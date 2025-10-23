@@ -10,6 +10,8 @@ import { useReducer, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { initializeTimes, updateTimes } from "../../utils/bookingUtils";
 import { useFormValidation } from "../../hooks/useFormValidation";
+import { submitAPI } from "../../utils/api";
+import { occasionOptions } from "../../dummyData";
 
 const Thumbnail = styled.img`
   width: 100%;
@@ -89,17 +91,14 @@ export const FlexContainer = styled.div<{
   }
 `;
 
-declare function submitAPI(formData: object): boolean;
-
 type DateProp = Date | null;
 export type DateType = DateProp | [DateProp, DateProp];
-export type OccasionType = "Birthday" | "Anniversary";
 export type Reservation = {
   date: DateType;
   time: string;
   dinersCount: number;
   isSeatingIndoor: boolean;
-  occasion: OccasionType;
+  occasion: string;
 };
 export type Contact = {
   firstName: string;
@@ -107,16 +106,20 @@ export type Contact = {
   email: string;
 };
 export type ErrorType = {
+  time: string;
+  dinersCount: string;
+  occasion: string;
   firstName: string;
   lastName: string;
   email: string;
-  dinersCount: string;
 };
 export type Touched = {
+  time: boolean;
+  dinersCount: boolean;
+  occasion: boolean;
   firstName: boolean;
   lastName: boolean;
   email: boolean;
-  dinersCount: boolean;
 };
 export type TimesAction = { type: "UPDATE_TIMES"; date: DateType };
 
@@ -132,17 +135,19 @@ const BookingPage = () => {
   const [availableTimes, dispatchTimes] = useReducer(timesReducer, [], initializeTimes);
   const [reservation, setReservation] = useState<Reservation>({
     date: new Date(),
-    time: "",
+    time: availableTimes.length > 0 ? availableTimes[0] : "",
     dinersCount: 1,
     isSeatingIndoor: true,
-    occasion: "Birthday",
+    occasion: occasionOptions.length > 0 ? occasionOptions[0] : "",
   });
   const [contact, setContact] = useState<Contact>({ firstName: "", lastName: "", email: "" });
-  const [touched, setTouched] = useState({
+  const [touched, setTouched] = useState<Touched>({
+    time: false,
+    dinersCount: false,
+    occasion: false,
     firstName: false,
     lastName: false,
     email: false,
-    dinersCount: false,
   });
 
   const { isSubmitDisabled, errors } = useFormValidation(reservation, contact, touched);

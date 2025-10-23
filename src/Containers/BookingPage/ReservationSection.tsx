@@ -1,3 +1,4 @@
+import type { ChangeEvent, FocusEvent } from "react";
 import styled from "styled-components";
 import {
   Container,
@@ -5,7 +6,6 @@ import {
   Subtitle,
   type DateType,
   type ErrorType,
-  type OccasionType,
   type Reservation,
   type TimesAction,
   type Touched,
@@ -18,6 +18,7 @@ import { media } from "../../styles/Theme";
 import { useEffect, useRef, type Dispatch, type FC, type SetStateAction } from "react";
 import { minMaxDiners } from "../../utils/constants";
 import { ErrorMessage } from "../../styles/StyledComponents";
+import { occasionOptions } from "../../dummyData";
 
 const ReservationDetails = styled.div`
   ${({ theme }) => media.md`
@@ -163,8 +164,9 @@ const CustomRadioInput = styled.input`
   accent-color: ${({ theme }) => theme.color.primary.dark};
   cursor: pointer;
 `;
-const SelectField = styled.select`
-  border: 2px solid ${({ theme }) => theme.color.primary.dark};
+const SelectField = styled.select<{ $error?: boolean }>`
+  border: 2px solid
+    ${({ theme, $error }) => ($error ? theme.color.error : theme.color.primary.dark)};
   border-radius: ${({ theme }) => theme.borderRadius.sm};
   padding: ${({ theme }) => theme.spacing.sm};
   background-color: ${({ theme }) => theme.color.background};
@@ -187,8 +189,6 @@ const SelectField = styled.select`
   }
 
   option {
-    color: ${({ theme }) => theme.color.primary.dark};
-    background-color: ${({ theme }) => theme.color.background};
     font-size: ${({ theme }) => theme.fontSize.xs};
   }
 `;
@@ -214,7 +214,7 @@ const ReservationSection: FC<ReservationSectionProps> = ({
   setTouched,
 }) => {
   const timeInputRef = useRef<HTMLInputElement>(null);
-  const { date, dinersCount, isSeatingIndoor } = reservation;
+  const { date, time, dinersCount, isSeatingIndoor, occasion } = reservation;
 
   const maxReservationDate = new Date();
   maxReservationDate.setDate(currentDate.getDate() + 30);
@@ -231,14 +231,21 @@ const ReservationSection: FC<ReservationSectionProps> = ({
     if (calendarLabelBtn) calendarLabelBtn.setAttribute("tabindex", "-1");
   }, []);
 
+  const handleSelectChange = (event: ChangeEvent<HTMLSelectElement>) => {
+    const { name, value } = event.target;
+    setReservation(prev => ({ ...prev, [name]: value }));
+  };
+  const handleSelectBlur = (event: FocusEvent<HTMLSelectElement>) => {
+    const { name } = event.target as { name: keyof Touched };
+    setTouched(prev => (!prev[name] ? { ...prev, [name]: true } : prev));
+  };
   const handleDinerCountChange = (key: "increase" | "decrease" | "update", value?: number) => {
-    if (key) setTouched(prev => ({ ...prev, dinersCount: true }));
+    if (key) setTouched(prev => (!prev.dinersCount ? { ...prev, dinersCount: true } : prev));
     switch (key) {
       case "decrease":
         setReservation(prev => ({ ...prev, dinersCount: prev.dinersCount - 1 }));
         break;
       case "update":
-        console.log({ value });
         if (value !== undefined) setReservation(prev => ({ ...prev, dinersCount: value }));
         break;
       case "increase":
@@ -254,7 +261,7 @@ const ReservationSection: FC<ReservationSectionProps> = ({
       <Subtitle id="reservation-details">Reservation details</Subtitle>
       <ReservationDetails>
         <Container aria-labelledby="res-date">
-          <h3 id="res-date">Select date *</h3>
+          <h3 id="res-date">Select date</h3>
           <CustomCalendar
             prev2Label={null}
             next2Label={null}
@@ -266,24 +273,31 @@ const ReservationSection: FC<ReservationSectionProps> = ({
           />
         </Container>
         <GridContainer>
-          <FlexContainer>
+          <FlexContainer $justifyChildEnd $isRelative>
             <label htmlFor="res-time">
-              <h3>Select time *</h3>
+              <h3>Select time</h3>
             </label>
+            {errors.time !== "" && <ErrorMessage>{errors.time}</ErrorMessage>}
             <SelectField
               id="res-time"
-              onChange={e => setReservation(prev => ({ ...prev, time: e.target.value as string }))}
+              name="time"
+              onChange={handleSelectChange}
+              onBlur={handleSelectBlur}
+              onFocus={handleSelectBlur}
+              value={time}
+              $error={errors.time !== "" && touched.time}
             >
-              {availableTimes.map(timeSlot => (
-                <option key={timeSlot} value={timeSlot}>
-                  {timeSlot}
-                </option>
-              ))}
+              {availableTimes.length > 0 &&
+                availableTimes.map(timeSlot => (
+                  <option key={timeSlot} value={timeSlot}>
+                    {timeSlot}
+                  </option>
+                ))}
             </SelectField>
           </FlexContainer>
 
           <FlexContainer aria-labelledby="res-guests" $justifyChildEnd $isRelative>
-            <h3 id="res-guests">Select number of diners *</h3>
+            <h3 id="res-guests">Select number of diners</h3>
             {errors.dinersCount !== "" && touched.dinersCount && (
               <ErrorMessage>{errors.dinersCount}</ErrorMessage>
             )}
@@ -298,6 +312,7 @@ const ReservationSection: FC<ReservationSectionProps> = ({
               </CounterIcon>
               <NumberDiners
                 type="number"
+                name="dinersCount"
                 min={minMaxDiners.min}
                 max={minMaxDiners.max}
                 step="1"
@@ -341,18 +356,28 @@ const ReservationSection: FC<ReservationSectionProps> = ({
               </FlexContainer>
             </FlexContainer>
           </FlexContainer>
-          <FlexContainer>
+          <FlexContainer $isRelative>
             <label htmlFor="occasion">
               <h3>Select occasion</h3>
             </label>
+            {touched.occasion && errors.occasion !== "" && (
+              <ErrorMessage>{errors.occasion}</ErrorMessage>
+            )}
             <SelectField
               id="occasion"
-              onChange={e =>
-                setReservation(prev => ({ ...prev, occasion: e.target.value as OccasionType }))
-              }
+              name="occasion"
+              value={occasion}
+              onChange={handleSelectChange}
+              onBlur={handleSelectBlur}
+              onFocus={handleSelectBlur}
+              $error={touched.occasion && errors.occasion !== ""}
             >
-              <option value="birthday">Birthday</option>
-              <option value="anniversary">Anniversary</option>
+              {occasionOptions.length > 0 &&
+                occasionOptions.map(occasionOption => (
+                  <option key={occasionOption} value={occasionOption}>
+                    {occasionOption}
+                  </option>
+                ))}
             </SelectField>
           </FlexContainer>
         </GridContainer>

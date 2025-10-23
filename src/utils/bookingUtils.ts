@@ -1,5 +1,5 @@
 import type { DateType } from "../Containers/BookingPage/BookingPage";
-import { fetchAPI } from "./api.js";
+import { fetchAPI } from "./api";
 
 export const initializeTimes = (): string[] => {
   const today = new Date();

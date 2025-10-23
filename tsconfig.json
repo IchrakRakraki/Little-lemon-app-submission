@@ -1,5 +1,5 @@
 {
   "files": [],
-  "include": ["src", "styled.d.ts", "tests", "src/utils/api.js"],
+  "include": ["src", "styled.d.ts", "tests", "src/utils/api.ts"],
   "references": [{ "path": "./tsconfig.app.json" }, { "path": "./tsconfig.node.json" }]
 }

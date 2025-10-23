@@ -73,3 +73,5 @@ export const testimonials = [
     avatar: avatarAsh,
   },
 ];
+
+export const occasionOptions: string[] = ["Birthday", "Anniversary"];
