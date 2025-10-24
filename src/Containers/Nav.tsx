@@ -125,6 +125,7 @@ const NavLink = styled.li`
 `;
 export const CustomLink = styled.a<{ $smallPadding?: boolean }>`
   position: relative;
+  display: inline-block;
   padding: ${({ theme, $smallPadding }) => ($smallPadding ? theme.spacing.sm : theme.spacing.md)};
   transition: color 0.2s ease;
   &::after {
