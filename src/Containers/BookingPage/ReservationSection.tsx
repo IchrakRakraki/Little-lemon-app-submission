@@ -213,7 +213,7 @@ const ReservationSection: FC<ReservationSectionProps> = ({
   touched,
   setTouched,
 }) => {
-  const timeInputRef = useRef<HTMLInputElement>(null);
+  const timeInputRef = useRef<HTMLSelectElement>(null);
   const { date, time, dinersCount, isSeatingIndoor, occasion } = reservation;
 
   const maxReservationDate = new Date();
