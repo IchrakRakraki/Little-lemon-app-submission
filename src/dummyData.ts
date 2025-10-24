@@ -74,4 +74,10 @@ export const testimonials = [
   },
 ];
 
-export const occasionOptions: string[] = ["Birthday", "Anniversary"];
+export const occasionOptions: string[] = [
+  "Birthday",
+  "Anniversary",
+  "Casual Dining",
+  "Family Gathering",
+  "Business Meeting",
+];

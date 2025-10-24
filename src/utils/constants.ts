@@ -21,12 +21,12 @@ export const emailErrorMsg: { required: string; invalid: string } = {
 
 type NavigationLink = { link: string; label: string };
 export const navigationLinks: NavigationLink[] = [
-  { link: "/", label: "Home" },
+  { link: "/#", label: "Home" },
+  { link: "/#specials", label: "Menu" },
   { link: "/#about", label: "About" },
-  { link: "/#menu", label: "Menu" },
   { link: "/booking", label: "Reservations" },
   { link: "/#order", label: "Order Online" },
-  { link: "/login", label: "Login" },
+  // { link: "/login", label: "Login" },
 ];
 
 export const footerNavigationLinks: {

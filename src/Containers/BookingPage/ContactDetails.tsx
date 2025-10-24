@@ -4,6 +4,7 @@ import { Container, Subtitle, type Contact, type ErrorType, type Touched } from 
 import { media } from "../../styles/Theme";
 import type { ChangeEvent, FocusEvent, Dispatch, FC, SetStateAction } from "react";
 import { ErrorMessage } from "../../styles/StyledComponents";
+import { RequiredLabel } from "./ReservationSection";
 
 const ContactDetails = styled.div`
   display: grid;
@@ -63,13 +64,12 @@ const ContactSection: FC<ContactSectionProps> = ({
         <Container>
           <Container $spacingValue="xs">
             <label htmlFor="firstName">
-              <h3>First Name</h3>
+              <RequiredLabel>First Name</RequiredLabel>
             </label>
             <CustomInput
               type="text"
               name="firstName"
               id="firstName"
-              placeholder="e.g. Jane"
               value={firstName}
               onChange={handleTextField}
               onBlur={handleOnBlur}
@@ -82,13 +82,12 @@ const ContactSection: FC<ContactSectionProps> = ({
           </Container>
           <Container $spacingValue="xs">
             <label htmlFor="lastName">
-              <h3>Last Name</h3>
+              <RequiredLabel>Last Name</RequiredLabel>
             </label>
             <CustomInput
               type="text"
               name="lastName"
               id="lastName"
-              placeholder="e.g. Smith"
               value={lastName}
               onChange={handleTextField}
               onBlur={handleOnBlur}
@@ -101,13 +100,12 @@ const ContactSection: FC<ContactSectionProps> = ({
           </Container>
           <Container $spacingValue="xs">
             <label htmlFor="email">
-              <h3>Email Address</h3>
+              <RequiredLabel>Email Address</RequiredLabel>
             </label>
             <CustomInput
               type="email"
               name="email"
               id="email"
-              placeholder="e.g. Jane.smith@gmail.com"
               value={email}
               onChange={handleTextField}
               onBlur={handleOnBlur}

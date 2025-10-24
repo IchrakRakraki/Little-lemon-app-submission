@@ -1,4 +1,5 @@
 import { createGlobalStyle } from "styled-components";
+import { media } from "./Theme";
 
 export const GlobalStyles = createGlobalStyle`
   * {
@@ -24,6 +25,11 @@ export const GlobalStyles = createGlobalStyle`
 
   section:not(.hero){
     padding: 5rem 0 6rem;
+
+    ${media.md`
+    scroll-margin-top: 80px;
+    `}
+    
   }
 
   #bookingRsvDetails, #bookingContactDetails {

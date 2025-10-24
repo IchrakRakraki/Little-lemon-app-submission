@@ -193,6 +193,15 @@ const SelectField = styled.select<{ $error?: boolean }>`
   }
 `;
 
+export const RequiredLabel = styled.h3`
+  position: relative;
+  &::after {
+    content: "*";
+    font-weight: ${({ theme }) => theme.fontWeight.bold};
+    color: ${({ theme }) => theme.color.error};
+  }
+`;
+
 type ReservationSectionProps = {
   reservation: Reservation;
   currentDate: Date;
@@ -262,7 +271,7 @@ const ReservationSection: FC<ReservationSectionProps> = ({
       <Subtitle id="reservation-details">Reservation details</Subtitle>
       <ReservationDetails>
         <Container aria-labelledby="res-date">
-          <h3 id="res-date">Select date</h3>
+          <RequiredLabel id="res-date">Select date</RequiredLabel>
           <CustomCalendar
             prev2Label={null}
             next2Label={null}
@@ -276,7 +285,7 @@ const ReservationSection: FC<ReservationSectionProps> = ({
         <GridContainer>
           <FlexContainer $justifyChildEnd $isRelative>
             <label htmlFor="res-time">
-              <h3>Select time</h3>
+              <RequiredLabel>Select time</RequiredLabel>
             </label>
             {errors.time !== "" && <ErrorMessage>{errors.time}</ErrorMessage>}
             <SelectField
@@ -299,7 +308,7 @@ const ReservationSection: FC<ReservationSectionProps> = ({
           </FlexContainer>
 
           <FlexContainer aria-labelledby="res-guests" $justifyChildEnd $isRelative>
-            <h3 id="res-guests">Select number of diners</h3>
+            <RequiredLabel id="res-guests">Select number of diners</RequiredLabel>
             {errors.dinersCount !== "" && touched.dinersCount && (
               <ErrorMessage>{errors.dinersCount}</ErrorMessage>
             )}
@@ -333,7 +342,7 @@ const ReservationSection: FC<ReservationSectionProps> = ({
             </FlexContainer>
           </FlexContainer>
           <FlexContainer aria-labelledby="seating-area-label" $justifyChildEnd>
-            <h3 id="seating-area-label">Select seating area</h3>
+            <RequiredLabel id="seating-area-label">Select seating area</RequiredLabel>
             <FlexContainer>
               <FlexContainer $type="radio">
                 <CustomRadioInput
@@ -360,7 +369,7 @@ const ReservationSection: FC<ReservationSectionProps> = ({
           </FlexContainer>
           <FlexContainer $isRelative>
             <label htmlFor="occasion">
-              <h3>Select occasion</h3>
+              <RequiredLabel>Select occasion</RequiredLabel>
             </label>
             {touched.occasion && errors.occasion !== "" && (
               <ErrorMessage>{errors.occasion}</ErrorMessage>
