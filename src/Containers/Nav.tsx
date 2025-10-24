@@ -7,6 +7,7 @@ import { ColumnGrid } from "../styles/StyledComponents";
 import { useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faX } from "@fortawesome/free-solid-svg-icons";
+import { navigationLinks } from "../utils/constants";
 
 const StyledNav = styled.nav`
   grid-column: 1/-1;
@@ -73,12 +74,14 @@ const MobileMenu = styled.div<{ $isVisible: boolean; $isTransitioning: boolean }
   width: 100vw;
   z-index: 10;
   background-color: ${({ theme }) => theme.color.background};
-
   padding: ${({ theme }) => theme.spacing.lg};
   animation: ${({ $isVisible, $isTransitioning }) =>
       $isVisible ? "slideIn" : $isTransitioning ? "slideOut" : "none"}
     0.7s ease forwards;
   will-change: transform;
+  ${media.md`
+    display: none;
+  `}
 `;
 const MobileMenuHeader = styled.div`
   display: flex;
@@ -102,30 +105,43 @@ const MobileNavLinks = styled.ul`
   display: flex;
   flex-direction: column;
   gap: ${({ theme }) => theme.spacing.xl};
-
-  & > li > a {
-    color: ${({ theme }) => theme.color.primary.dark};
-    font-size: ${({ theme }) => theme.fontSize.md};
-  }
 `;
 const NavLinks = styled.ul`
   display: none;
-
-  ${({ theme }) => media.md`
+  ${media.md`
         display: flex;
         justify-content: space-between;
         justify-self: flex-end;
         align-items: center;
-        gap: ${theme.spacing.md}
-    `}
-  ${({ theme }) => media.lg`
-        gap: ${theme.spacing.lg}
     `}
 `;
 
 const NavLink = styled.li`
   font-weight: ${({ theme }) => theme.fontWeight.medium};
-  font-size: ${({ theme }) => theme.fontSize.sm};
+  font-size: ${({ theme }) => theme.fontSize.md};
+  ${({ theme }) => media.md`
+    font-size: ${theme.fontSize.sm}
+  `}
+`;
+export const CustomLink = styled.a<{ $smallPadding?: boolean }>`
+  position: relative;
+  padding: ${({ theme, $smallPadding }) => ($smallPadding ? theme.spacing.sm : theme.spacing.md)};
+  transition: color 0.2s ease;
+  &::after {
+    content: "";
+    position: absolute;
+    left: ${({ theme, $smallPadding }) => ($smallPadding ? theme.spacing.sm : theme.spacing.md)};
+    bottom: 4px;
+    width: 0%;
+    height: 2px;
+    background-color: ${({ theme }) => theme.color.primary.dark};
+    transition: width 0.25s ease;
+  }
+  &:hover {
+    &::after {
+      width: calc(100% - ${({ $smallPadding }) => ($smallPadding ? "16px" : "32px")});
+    }
+  }
 `;
 
 const LogoLink = styled.a`
@@ -134,16 +150,6 @@ const LogoLink = styled.a`
     outline: 4px solid ${({ theme }) => theme.color.primary.light};
   }
 `;
-
-type NavigationLink = { link: string; label: string };
-const navigationLinks: NavigationLink[] = [
-  { link: "/", label: "Home" },
-  { link: "/#about", label: "About" },
-  { link: "/#menu", label: "Menu" },
-  { link: "/booking", label: "Reservations" },
-  { link: "/#order", label: "Order Online" },
-  { link: "/login", label: "Login" },
-];
 
 const Logo = () => (
   <LogoLink href="/" aria-label="Navigate to Homepage">
@@ -189,10 +195,10 @@ const Nav = () => {
             </MobileMenuHeader>
             <MobileNavLinks>
               {navigationLinks.map(linkObj => (
-                <NavLink>
-                  <a href={linkObj.link} onClick={handleCloseMenu}>
+                <NavLink key={linkObj.label}>
+                  <CustomLink href={linkObj.link} onClick={handleCloseMenu}>
                     {linkObj.label}
-                  </a>
+                  </CustomLink>
                 </NavLink>
               ))}
             </MobileNavLinks>
@@ -208,8 +214,8 @@ const Nav = () => {
         />
         <NavLinks>
           {navigationLinks.map(linkObj => (
-            <NavLink>
-              <a href={linkObj.link}>{linkObj.label}</a>
+            <NavLink key={linkObj.label}>
+              <CustomLink href={linkObj.link}>{linkObj.label}</CustomLink>
             </NavLink>
           ))}
         </NavLinks>

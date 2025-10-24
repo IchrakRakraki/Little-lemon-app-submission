@@ -223,6 +223,7 @@ const ReservationSection: FC<ReservationSectionProps> = ({
     if (Array.isArray(value)) return;
     setReservation(prev => ({ ...prev, date: value }));
     dispatchTimes({ type: "UPDATE_TIMES", date: value });
+    console.log(timeInputRef.current);
     timeInputRef.current?.focus();
   };
   useEffect(() => {
@@ -286,6 +287,7 @@ const ReservationSection: FC<ReservationSectionProps> = ({
               onFocus={handleSelectBlur}
               value={time}
               $error={errors.time !== "" && touched.time}
+              ref={timeInputRef}
             >
               {availableTimes.length > 0 &&
                 availableTimes.map(timeSlot => (

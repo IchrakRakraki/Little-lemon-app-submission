@@ -18,3 +18,31 @@ export const emailErrorMsg: { required: string; invalid: string } = {
   required: "Email is required",
   invalid: "Invalid email address",
 };
+
+type NavigationLink = { link: string; label: string };
+export const navigationLinks: NavigationLink[] = [
+  { link: "/", label: "Home" },
+  { link: "/#about", label: "About" },
+  { link: "/#menu", label: "Menu" },
+  { link: "/booking", label: "Reservations" },
+  { link: "/#order", label: "Order Online" },
+  { link: "/login", label: "Login" },
+];
+
+export const footerNavigationLinks: {
+  doormat: NavigationLink[];
+  contact: NavigationLink[];
+  social: NavigationLink[];
+} = {
+  doormat: navigationLinks,
+  contact: [
+    { link: "", label: "Address" },
+    { link: "", label: "Phone Number" },
+    { link: "", label: "Email" },
+  ],
+  social: [
+    { link: "", label: "Tiktok" },
+    { link: "", label: "Instagram" },
+    { link: "", label: "Facebook" },
+  ],
+};
