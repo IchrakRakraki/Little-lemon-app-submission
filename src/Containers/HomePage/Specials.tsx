@@ -30,12 +30,16 @@ const Content = styled.div`
   `}
 `;
 const SectionHeader = styled.div`
+  display: flex;
+  flex-direction: column;
+  justify-content: space-evenly;
+  gap: ${({ theme }) => theme.spacing.md};
   ${media.md`
     grid-column: 1/4;
-    display: flex;
+    flex-direction: row;
     justify-content: space-between;
     align-items: center;
-  `}
+  `};
 `;
 
 const Specials = () => (
@@ -46,6 +50,7 @@ const Specials = () => (
           <h1>This week's specials!</h1>
           <CTAButton buttonText="Online Menu" onClick={() => console.log("Menu")} />
         </SectionHeader>
+
         {weekSpecials.map(item => (
           <Card key={item.id} {...item} />
         ))}

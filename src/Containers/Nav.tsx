@@ -1,9 +1,12 @@
-import logo from "../assets/Logo.svg";
+import logoImg from "../assets/Logo.svg";
 import hamburgerIcon from "../assets/hamburger_menu.svg";
 import basketIcon from "../assets/basket.svg";
 import styled from "styled-components";
 import { media } from "../styles/Theme";
 import { ColumnGrid } from "../styles/StyledComponents";
+import { useState } from "react";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faX } from "@fortawesome/free-solid-svg-icons";
 
 const StyledNav = styled.nav`
   grid-column: 1/-1;
@@ -32,11 +35,79 @@ const StyledNav = styled.nav`
 const MobileIcon = styled.img<{ $isLeftIcon?: boolean }>`
   width: 32px;
   margin: ${({ $isLeftIcon }) => ($isLeftIcon ? "12px 12px 12px 0" : "12px 0 12px 12px")};
+  cursor: pointer;
+  &:hover {
+    background-color: ${({ theme }) => theme.color.highlight.light};
+  }
+
+  &:focus,
+  &:focus-visible {
+    outline: 4px solid ${({ theme }) => theme.color.primary.light};
+    outline-offset: ${({ theme }) => theme.spacing.sm};
+  }
   ${media.md`
         display: none;
     `};
 `;
+const MobileMenu = styled.div<{ $isVisible: boolean; $isTransitioning: boolean }>`
+  @keyframes slideIn {
+    from {
+      transform: translateX(-100vw);
+    }
+    to {
+      transform: translateX(100vw);
+    }
+  }
+  @keyframes slideOut {
+    from {
+      transform: translateX(100vw);
+    }
+    to {
+      transform: translateX(-100vw);
+    }
+  }
+  position: fixed;
+  top: 0;
+  left: -100vw;
+  height: 100vh;
+  width: 100vw;
+  z-index: 10;
+  background-color: ${({ theme }) => theme.color.background};
 
+  padding: ${({ theme }) => theme.spacing.lg};
+  animation: ${({ $isVisible, $isTransitioning }) =>
+      $isVisible ? "slideIn" : $isTransitioning ? "slideOut" : "none"}
+    0.7s ease forwards;
+  will-change: transform;
+`;
+const MobileMenuHeader = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2rem;
+`;
+const ExitIcon = styled(FontAwesomeIcon)`
+  cursor: pointer;
+  color: ${({ theme }) => theme.color.primary.dark};
+  padding: ${({ theme }) => theme.spacing.sm};
+  border: 2px solid ${({ theme }) => theme.color.primary.dark};
+  font-size: ${({ theme }) => theme.fontSize.sm};
+  &:focus,
+  &:focus-visible {
+    outline: 4px solid ${({ theme }) => theme.color.primary.light};
+    outline-offset: ${({ theme }) => theme.spacing.xs};
+  }
+`;
+const MobileNavLinks = styled.ul`
+  display: flex;
+  flex-direction: column;
+  gap: ${({ theme }) => theme.spacing.xl};
+
+  & > li > a {
+    color: ${({ theme }) => theme.color.primary.dark};
+    font-size: ${({ theme }) => theme.fontSize.md};
+  }
+`;
 const NavLinks = styled.ul`
   display: none;
 
@@ -56,33 +127,91 @@ const NavLink = styled.li`
   font-weight: ${({ theme }) => theme.fontWeight.medium};
   font-size: ${({ theme }) => theme.fontSize.sm};
 `;
-// TODO: add menu for mobile devices
+
+const LogoLink = styled.a`
+  &:focus,
+  &:focus-visible {
+    outline: 4px solid ${({ theme }) => theme.color.primary.light};
+  }
+`;
+
+type NavigationLink = { link: string; label: string };
+const navigationLinks: NavigationLink[] = [
+  { link: "/", label: "Home" },
+  { link: "/#about", label: "About" },
+  { link: "/#menu", label: "Menu" },
+  { link: "/booking", label: "Reservations" },
+  { link: "/#order", label: "Order Online" },
+  { link: "/login", label: "Login" },
+];
+
+const Logo = () => (
+  <LogoLink href="/" aria-label="Navigate to Homepage">
+    <img src={logoImg} alt="Little Lemon restautant logo." />
+  </LogoLink>
+);
 const Nav = () => {
+  const [isMobileMenuVisible, setIsMobileMenuVisible] = useState<boolean>(false);
+  const [isTransitioning, setIsTransitioning] = useState<boolean>(false);
+  const handleCloseMenu = () => {
+    setIsTransitioning(true);
+    const t = setTimeout(() => {
+      setIsMobileMenuVisible(false);
+    }, 450); // match animation duration
+    return () => {
+      clearTimeout(t);
+      setIsTransitioning(false);
+    };
+  };
   return (
     <ColumnGrid>
       <StyledNav>
-        <MobileIcon src={hamburgerIcon} alt="Hamberger menu icon." $isLeftIcon />
-        <img src={logo} alt="Little Lemon restautant logo." />
-        <MobileIcon src={basketIcon} alt="Basket icon." />
+        <MobileIcon
+          role="button"
+          aria-label="Open navigation menu"
+          onClick={() => setIsMobileMenuVisible(true)}
+          src={hamburgerIcon}
+          alt="Hamberger menu icon."
+          tabIndex={0}
+          $isLeftIcon
+        />
+        {(isTransitioning || isMobileMenuVisible) && (
+          <MobileMenu $isVisible={isMobileMenuVisible} $isTransitioning={isTransitioning}>
+            <MobileMenuHeader>
+              <Logo />
+              <ExitIcon
+                tabIndex={0}
+                icon={faX}
+                role="button"
+                aria-label="Close navigation menu"
+                onClick={handleCloseMenu}
+              />
+            </MobileMenuHeader>
+            <MobileNavLinks>
+              {navigationLinks.map(linkObj => (
+                <NavLink>
+                  <a href={linkObj.link} onClick={handleCloseMenu}>
+                    {linkObj.label}
+                  </a>
+                </NavLink>
+              ))}
+            </MobileNavLinks>
+          </MobileMenu>
+        )}
+        <Logo />
+        <MobileIcon
+          src={basketIcon}
+          alt="Basket icon."
+          tabIndex={0}
+          role="button"
+          aria-label="Open basket"
+        />
         <NavLinks>
-          <NavLink>
-            <a href="/">Home</a>
-          </NavLink>
-          <NavLink>
-            <a href="#about">About</a>
-          </NavLink>
-          <NavLink>
-            <a href="#menu">Menu</a>
-          </NavLink>
-          <NavLink>
-            <a href="/booking">Reservations</a>
-          </NavLink>
-          <NavLink>
-            <a href="#order">Order Online</a>
-          </NavLink>
-          <NavLink>
-            <a href="#login">Login</a>
-          </NavLink>
+          {navigationLinks.map(linkObj => (
+            <NavLink>
+              <a href={linkObj.link}>{linkObj.label}</a>
+            </NavLink>
+          ))}
         </NavLinks>
       </StyledNav>
     </ColumnGrid>

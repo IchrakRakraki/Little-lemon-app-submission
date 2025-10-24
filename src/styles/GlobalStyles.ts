@@ -6,8 +6,13 @@ export const GlobalStyles = createGlobalStyle`
     padding: 0;
     box-sizing: border-box;
     line-height: 1.15;
+    &:focus {
+    outline: 2px solid ${({ theme }) => theme.color.primary.light};
+    }
   }
-
+ html {
+    scroll-behavior: smooth;
+  }
   body {
     font-family: ${({ theme }) => theme.font.primary};
     background-color: ${({ theme }) => theme.color.background};
@@ -23,13 +28,16 @@ export const GlobalStyles = createGlobalStyle`
 
   #bookingRsvDetails, #bookingContactDetails {
     padding: 0;
+    & > div {
+      padding: 1rem 0
+    }
   }
 
   footer {
     padding: 5rem 0
   }
 
-  h1, h2, h3 {
+  h1, h2 {
     font-family: ${({ theme }) => theme.font.secondary};
   }
 
@@ -45,8 +53,8 @@ export const GlobalStyles = createGlobalStyle`
   }
 
   h3 {
-    font-size: ${({ theme }) => theme.fontSize.mdPlus};
-    font-weight: ${({ theme }) => theme.fontWeight.medium};
+    font-size: ${({ theme }) => theme.fontSize.sm};
+    font-weight: ${({ theme }) => theme.fontWeight.bold};
   }
 
   p {
@@ -65,4 +73,5 @@ export const GlobalStyles = createGlobalStyle`
   img{
     object-fit: cover;
   }
+  
 `;
